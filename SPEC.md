@@ -115,7 +115,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 | Term | Definition |
 |------|------------|
-| **Tool Action** | Any operation performed by an AI agent that affects external state (filesystem, database, network, system) |
+| **Tool Action** | Any operation performed by an AI agent that affects external state (filesystem, database, network, system). Read-only queries (`ls`, `cat`, `SELECT`) are Tool Actions but typically classified LOW; the plan/verdict requirements apply primarily to write or destructive operations. |
 | **Receipt** | A cryptographically-bound record of an action, decision, or state change |
 | **Tool Plan** | A structured description of intended tool actions, represented as a ToolPlanReceipt |
 | **Guardian** | The governance component that evaluates actions against safety policies |
@@ -167,7 +167,7 @@ Implementations SHOULD provide extensible pattern matching for domain-specific r
 
 Implementations MUST NOT downgrade CRITICAL default patterns in non-ephemeral environments. CRITICAL MUST remain CRITICAL unless an Ephemeral Attestation is present.
 
-Implementations MAY treat CRITICAL patterns as HIGH (but not lower) only when the action is confined to an explicitly declared Ephemeral Environment.
+Implementations MAY treat CRITICAL patterns as HIGH (but not lower) only when the action is confined to an explicitly declared Ephemeral Environment. **Risk MUST NOT be downgraded below HIGH for any CRITICAL default pattern, even in ephemeral environments.** Ephemeral attestations MUST NOT be reused across environments or persisted into production.
 
 When downgrading risk classification, implementations MUST:
 - Document the justification
@@ -428,11 +428,11 @@ For **Basic** conformant systems:
 - Rate limiting (1), allowlist (2), policy thresholds (5), and PII scrubbing (6) SHOULD be performed
 
 **Basic Amendment VII interpretation:** For Basic conformance, the Amendment VII constitutional check (step 4) is satisfied by:
-- Blocking CRITICAL actions via pattern matching
-- Emitting `AgentActionReceipt` for all HIGH/CRITICAL attempts
-- Emitting `RefusalReceipt` when blocking
+- **Blocking CRITICAL actions via pattern matching**
+- **Emitting `AgentActionReceipt` for all HIGH/CRITICAL attempts**
+- **Emitting `RefusalReceipt` when blocking**
 
-Plans and Guardian verdicts are NOT required for Basic. HIGH actions MAY execute with audit-only receipts. Implementations requiring plan/verdict for HIGH SHOULD adopt Standard conformance.
+This is the minimum. HIGH actions MAY execute with audit-only receipts. Implementations requiring plan/verdict for HIGH SHOULD adopt Standard conformance.
 
 Implementations MAY combine or reorder steps 1-3 and 5-6 as appropriate to their architecture, but MUST preserve the constitutional precedence of step 4.
 

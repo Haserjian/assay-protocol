@@ -1,194 +1,275 @@
-# How to Stop AI Tools from Deleting Your Drive
+# How to Stop AI Tools from Doing Catastrophic Things
 
-**A plain-English guide to the Constitutional Safety Protocol**
-
----
-
-## The Problem
-
-Last week, Google's Antigravity AI was asked to "clear the cache."
-
-It ran `rm -rf D:\*` and deleted the user's entire drive. Then it apologized.
-
-Around the same time, security researchers disclosed "IDEsaster" — 30+ vulnerabilities in AI-powered coding tools (Copilot, Cursor, Zed, etc.) that allow prompt injection to trigger remote code execution through trusted IDE features.
-
-These aren't edge cases. They're what happens when you give AI agents tool access without governance.
+*A plain-English guide to the CSP Tool Safety Profile*
 
 ---
 
-## The Solution: CSP Tool Safety Profile
+## 1. What problem are we actually solving?
 
-We wrote a specification that prevents these failures by design.
+Modern AI systems don't just **write text** – they can:
 
-**The core idea:**
+- run shell commands,
+- delete files,
+- call internal APIs,
+- update databases.
 
-> Before an AI can do anything dangerous, it needs:
-> 1. A signed plan saying what it will do
-> 2. A Guardian verdict approving that plan
-> 3. An auditable receipt of what happened
+We've already seen:
 
-No plan = no execution. No exceptions.
+- "Clear the cache" turning into `rm -rf` over an entire drive.
+- IDEs and agents being tricked by prompt injection into running dangerous commands via trusted tool interfaces.
+
+The common pattern:
+
+> A model is given powerful tools with very weak rules about **when** it's allowed to use them and **how**.
+
+CSP Tool Safety Profile is about putting those tools under **law**, not vibes.
 
 ---
 
-## How It Works (5 minutes)
+## 2. The core idea in one sentence
 
-### 1. Every action gets a risk level
+> **Any dangerous tool action must have a plan, a Guardian verdict, and a receipt.**
+
+No plan → no execution.
+No verdict → no execution.
+No receipt → constitutionally invalid.
+
+Everything else in the spec is just making that precise.
+
+---
+
+## 3. Step by step: what CSP Tool Safety does
+
+### 3.1 It makes the system admit when something is dangerous
+
+Every tool action gets a risk level:
 
 | Level | What it means | Examples |
 |-------|---------------|----------|
-| LOW | Read-only, safe | `ls`, `cat`, `grep` |
-| MEDIUM | Small changes | Edit one file |
-| HIGH | Destructive | `rm -rf ./dir`, `git push --force` |
-| CRITICAL | Catastrophic | `rm -rf /`, `DROP DATABASE`, `curl | sh` |
+| LOW | Read-only, safe | `ls`, `cat`, `grep`, `SELECT ...` |
+| MEDIUM | Small, local changes | edit one file |
+| HIGH | Destructive within a scope | `rm -rf ./dir`, `git push --force` |
+| CRITICAL | System- or data-destroying | `rm -rf /`, `DROP DATABASE`, `curl | sh` |
 
-### 2. HIGH and CRITICAL require authorization
+You can't pretend `rm -rf /` is "just another shell command."
+The system has to say: "this is CRITICAL."
 
-Before running `rm -rf anything`:
+### 3.2 HIGH and CRITICAL need a plan and a Guardian
+
+For anything HIGH or CRITICAL, a conformant system must:
+
+1. Create a **ToolPlan** (ToolPlanReceipt) that says:
+   - what tool,
+   - what scope,
+   - what risk,
+   - why.
+
+2. Ask **Guardian** for a verdict:
+   - `ALLOW`, `ESCALATE`, or `DENY`.
+
+3. Only run the action if Guardian says `ALLOW` (or escalated path says it's okay).
+
+If there's no plan or verdict, the action is refused and you get a **RefusalReceipt** explaining why.
+
+### 3.3 Everything writes a receipt
+
+Instead of "we think it probably did X," you get:
+
+- **AgentActionReceipt** – what the action was, how it was classified, what happened.
+- **RefusalReceipt** – why something was blocked, which rule (Amendment) it cited.
+- **ToolPlanReceipt** – what someone intended to do.
+- **GuardianVerdictReceipt** – who approved what, and under what assumptions.
+- **EmergencyOverrideReceipt** – when a human overrode safety checks and why.
+- **SelfRepair** receipts – when the laws themselves were changed.
+
+Receipts are:
+
+- hash-linked (so you can't silently rewrite history),
+- timestamped (so you know **when** the system believed what),
+- optionally signed (Court-Grade).
+
+### 3.4 The rules themselves can change – but only via due process
+
+Sometimes the rule is wrong:
+
+- your tooling is too strict,
+- or not strict enough,
+- or doesn't understand a new pattern.
+
+CSP doesn't freeze rules forever. It says:
+
+> If you want to change the rules, you have to do it as a **law-change episode**, not a hotfix.
+
+That episode has 5 receipts:
+
+1. **InvariantViolationReceipt** – "here's the problem."
+2. **SelfRepairProposalReceipt** – "here's the proposed fix."
+3. **SandboxRunReceipt** – "here's how we tested it."
+4. **CouncilDecisionReceipt** – "here's who approved it."
+5. **SelfRepairOutcomeReceipt** – "here's what happened in the real world."
+
+If that chain fails validation, the law change didn't "really" happen.
+
+---
+
+## 4. What changes in practice? Two short stories
+
+### 4.1 "Clear the cache"
+
+**Today (no CSP):**
 
 ```
-Agent: "I want to delete /tmp/old-cache"
-       → Creates ToolPlanReceipt (describes intent)
-       → Guardian evaluates: "Is this okay?"
-       → Guardian issues verdict: ALLOW / ESCALATE / DENY
-       → Only if ALLOW: execute
-       → Emit receipt of what happened
+User:  "Clear the cache"
+Agent: calls shell("rm -rf D:\*") in turbo mode
+Drive: deleted
+Agent: "I apologize for the inconvenience."
+Logs: maybe; nothing a lawyer loves
 ```
 
-If there's no plan, or the plan isn't signed, or Guardian didn't approve: **blocked**.
+**With CSP Tool Safety (Standard):**
 
-### 3. Everything produces a receipt
-
-Every action, every refusal, every decision creates a cryptographic receipt that:
-- Can't be forged (hash-linked chain)
-- Can be audited later
-- Works in court if needed
-
-### 4. The rules can evolve (safely)
-
-Safety rules aren't hardcoded. They're constitutional amendments that go through a formal process:
-
-1. Identify a safety gap
-2. Propose a fix
-3. Test it in a sandbox
-4. Get Council approval
-5. Deploy with receipts
-
-Every rule change is auditable. No silent policy updates.
-
-### 5. Humans can override (with a receipt)
-
-Sometimes you really do need to run a dangerous command. CSP allows this:
-
-- Provide written justification
-- System creates EmergencyOverrideReceipt
-- Secondary authority is notified
-- Single use only
-
-If you keep overriding the same thing, the system triggers an amendment review: "Maybe this rule is mis-scoped."
-
----
-
-## What Would Have Happened with Antigravity
-
-**Without CSP:**
 ```
-User: "Clear the cache"
-Agent: *runs rm -rf D:\* in turbo mode*
-Agent: "I apologize for deleting your drive"
-Drive: gone
+User:  "Clear the cache"
+Agent: drafts plan: rm -rf D:\*
+
+System:
+  → classifies as CRITICAL
+  → requires ToolPlan + Guardian verdict
+
+Checks:
+  Plan present?           NO
+  Guardian verdict?       N/A
+
+System:
+  → refuses action
+  → emits RefusalReceipt(amendment_vii_no_plan)
+  → drive remains intact
+
+Agent:
+  "To clear D:\ I need an approved plan.
+   Create and sign a plan, then request Guardian approval."
 ```
 
-**With CSP:**
-```
-User: "Clear the cache"
-Agent: *proposes ToolPlanReceipt: rm -rf D:\**
-System: Risk = CRITICAL. Plan required.
-System: No signed plan found.
-System: BLOCKED. Reason: amendment_vii_no_plan
-System: *emits RefusalReceipt*
-Agent: "I need approval before deleting D:\. Create a plan?"
-Drive: intact
-```
+Same model, same tools. You just added law and receipts around them.
+
+### 4.2 Repeated overrides
+
+Say you have a safety rule that's a bit too strict:
+
+- It keeps blocking a useful but slightly risky action.
+- Humans keep using an emergency override to push it through.
+
+CSP says:
+
+- Every override creates an EmergencyOverrideReceipt.
+- If the same pattern gets overridden often enough:
+  - System emits an InvariantStressReceipt.
+  - Triggers a law-change episode:
+    - "This rule may be wrong; let's fix it properly."
+
+You don't just "turn off safety" – you evolve it under governance.
 
 ---
 
-## Three Conformance Levels
+## 5. Do I need to implement everything?
 
-You don't have to go all-in immediately:
+No.
 
-| Level | What you need | Think of it as |
-|-------|---------------|----------------|
-| **Basic** | Block CRITICAL patterns, emit refusal receipts | Better than nothing |
-| **Standard** | Require plans + Guardian verdicts for HIGH/CRITICAL | Solid safety |
-| **Court-Grade** | Signed receipts, tri-temporal proofs, amendment pipeline | Legal audit trail |
+The spec has three levels for a reason:
 
-Start with Basic. Graduate when ready.
+### Basic – the "seatbelt" level
 
----
+- Classify tool calls (LOW → CRITICAL).
+- Block CRITICAL patterns like:
+  - `rm -rf /`
+  - `DROP DATABASE`
+  - `curl | sh`
+- Emit:
+  - AgentActionReceipt for all HIGH/CRITICAL attempts,
+  - RefusalReceipt when you block.
 
-## How This Maps to Real Standards
+You do NOT need plans or Guardian to be Basic-conformant.
 
-| Framework | How CSP implements it |
-|-----------|----------------------|
-| **OWASP LLM Top 10** | LLM08 (Excessive Agency) → risk classification + blocking |
-| **NIST AI RMF** | GOVERN → constitutional laws; MANAGE → enforcement |
-| **SOC 2** | Court-Grade level ≈ Type II audit trail |
+### Standard – production-ready
 
----
+- Basic +:
+  - Plan + Guardian verdict required for HIGH/CRITICAL.
+  - All mandatory receipts in the spec.
 
-## Want to Implement This?
+### Court-Grade – audit/regulator-ready
 
-The spec defines what conformant systems must do. You can implement it in any language/framework.
+- Standard +:
+  - Signed receipts,
+  - Tri-temporal timestamps,
+  - Law-change pipeline for safety rules.
 
-**Basic conformance** (start here):
-1. Classify all tool actions by risk level
-2. Block CRITICAL patterns (`rm -rf /`, `DROP DATABASE`, etc.)
-3. Emit RefusalReceipt when blocking
-
-**Standard conformance** (production-ready):
-- Basic + require ToolPlanReceipt for HIGH/CRITICAL
-- Add Guardian verdict before execution
-- Emit all mandatory receipts
-
-**Court-Grade conformance** (audit-ready):
-- Standard + sign all receipts
-- Implement tri-temporal timestamps
-- Support law-change pipeline
-
-**Reference implementation access:** [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) on this repo
+You can start with Basic (small code changes) and grow toward Standard / Court-Grade as you see value.
 
 ---
 
-## The Spec
+## 6. How does this relate to "real" standards?
 
-Full specification: [CSP Tool Safety Profile v1.2](./SPEC.md)
+CSP Tool Safety doesn't compete with SOC 2, NIST, OWASP; it helps you implement them.
 
-It's ~700 lines of RFC-style normative language. But the TL;DR is:
+- **OWASP LLM Top 10:**
+  - LLM08 (Excessive Agency): CSP gives you risk classification + blocking + receipts.
+- **NIST AI RMF:**
+  - GOVERN: constitutional laws + council + amendment history.
+  - MANAGE: Tool Safety enforcement + law-change pipeline.
+- **SOC 2 / HIPAA:**
+  - Court-Grade conformance gives you a story for:
+    - "Who approved this dangerous action?"
+    - "When did the rule change?"
+    - "Can we replay what happened?"
 
-> **Every dangerous AI action requires a signed plan, a Guardian verdict, and a receipt.**
-> **No turbo mode. No silent execution. No apologies after the fact.**
-
----
-
-## Why This Matters
-
-The Antigravity incident wasn't a bug. It was a design choice: "Let the AI do things fast without asking."
-
-IDEsaster wasn't a surprise. It was the predictable result of giving tools extensive permissions without governance.
-
-These failures will keep happening until we have **constitutional constraints** on AI tool use — not just guidelines, not just policies, but hard enforcement with audit trails.
-
-CSP is that constraint. It's open, it's vendor-neutral, and it works.
+Think of CSP as the protocol you implement to prove to yourself, your users, and your auditors that you're not running "YOLO agents in prod."
 
 ---
 
-## Links
+## 7. How to get started (practically)
 
-- **Full Spec**: [CSP Tool Safety Profile v1.2](./SPEC.md)
-- **Incident Analysis**: [Antigravity Analysis](./incidents/ANTIGRAVITY.md)
-- **Implementation Access**: [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)
+**If you're an agent / tooling developer:**
+
+- Start by:
+  - adding a risk classifier,
+  - blocking a few obviously CRITICAL patterns,
+  - emitting AgentActionReceipt + RefusalReceipt in a JSON log.
+- Then:
+  - add an explicit "plan" concept,
+  - route HIGH/CRITICAL tool calls through it,
+  - introduce a simple Guardian rules engine.
+
+**If you're a security / platform engineer:**
+
+- Use CSP Tool Safety as your policy template:
+  - Require Basic conformance for any AI that can touch prod,
+  - Require Standard for exposed IDE / agent products,
+  - Reserve Court-Grade for regulatory / clinical / finance contexts.
+
+**If you're a compliance / risk person:**
+
+- Ask vendors:
+  - "Do you follow a formal Tool Safety Profile?"
+  - "Can you show me a RefusalReceipt for a blocked `rm -rf /`?"
+  - "How do you change your safety rules – is there a law-change process?"
 
 ---
 
-*CSP is released under CC BY 4.0. Created by Tim Bhaserjian.*
+## 8. Where to go next
+
+- **Full spec:** [SPEC.md](./SPEC.md)
+- **Incident walkthrough:** [incidents/ANTIGRAVITY.md](./incidents/ANTIGRAVITY.md)
+- **Implementor checklists:** [IMPLEMENTORS.md](./IMPLEMENTORS.md)
+
+If you want to test your implementation against the profile, [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) and we can point you at the reference test suite.
+
+---
+
+**Short version:**
+
+> CSP Tool Safety doesn't stop you using powerful tools.
+> It stops your AI using them like a sleep-deprived junior with root access and no change log.
+
+---
+
+*Created by Tim Bhaserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
