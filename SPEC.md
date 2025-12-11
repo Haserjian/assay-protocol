@@ -5,7 +5,7 @@
 **Status:** Release Candidate
 **Version:** 1.0.0-rc1
 **Date:** December 10, 2025
-**Author:** Tim Bhaserjian
+**Author:** Tim B. Haserjian
 **Witness:** Constitutional Genesis Receipt `eb14026e...` (see CONSTITUTIONAL_HISTORY.md)
 
 ---
@@ -856,4 +856,4 @@ These will be addressed in CSP-1.1 or a separate Federation Profile.
 
 ---
 
-*This specification is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: Tim Bhaserjian, Constitutional Safety Protocol Project.*
+*This specification is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: Tim B. Haserjian, Constitutional Safety Protocol Project.*

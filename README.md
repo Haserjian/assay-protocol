@@ -104,4 +104,4 @@ See `IMPLEMENTORS.md` for checklists. A reference implementation exists separate
 
 ---
 
-*Created by Tim Bhaserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
+*Created by Tim B. Haserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*

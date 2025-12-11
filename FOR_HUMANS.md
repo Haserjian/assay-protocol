@@ -131,4 +131,4 @@ CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frame
 
 ---
 
-*Created by Tim Bhaserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
+*Created by Tim B. Haserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
