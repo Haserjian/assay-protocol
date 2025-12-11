@@ -6,10 +6,10 @@
 
 ## 1) What problem are we solving?
 
-AI agents now run shell commands, delete files, call APIs, and update databases—from natural language. Without governance:
+AI agents now run shell commands, delete files, call APIs, and update databases—from natural language. Without governance, we've already seen examples like:
 
-- "Clear the cache" can become `rm -rf` over an entire drive.
-- Prompt injection can trick IDE/agent tools into RCE.
+- "Clear the cache" becoming `rm -rf` over an entire drive.
+- Prompt injection tricking IDE/agent tools into RCE.
 
 CSP Tool Safety puts those tools under **law**, not vibes.
 
@@ -64,7 +64,7 @@ Logs:  maybe; nothing you'd want to rely on in an audit
 Agent proposes: rm -rf D:\*
 System: risk = CRITICAL → needs plan + verdict
 Plan present? NO → BLOCKED
-Receipt: RefusalReceipt (amendment_vii_no_plan)
+Receipt: RefusalReceipt (amendment_vii_no_plan, citing Amendment VII—the "tool safety" rule)
 Drive: intact
 Agent: "Create and sign a plan, then request Guardian approval."
 ```

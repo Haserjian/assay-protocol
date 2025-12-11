@@ -100,6 +100,7 @@ See `IMPLEMENTORS.md` for checklists. A reference implementation exists separate
 - **Spec version:** 1.2.0-rc1 (Release Candidate)
 - **License:** CC BY 4.0
 - **Lineage:** CSP-1.0 Genesis (Law 1–5), Amendment VII (Tool Safety)
+- **Feedback:** Welcome via [GitHub Issues](https://github.com/Haserjian/csp-tool-safety-profile/issues)
 
 ---
 

@@ -1,6 +1,8 @@
 # CSP Tool Safety Profile v1.2 – Implementors Guide
 
-Use this as a checklist. If you can check every box in your chosen tier, you are **CSP Tool Safety–conformant**.
+Use this as a checklist. If you can check every box in your chosen tier, you can honestly claim **CSP Tool Safety–conformant**.
+
+You can enforce these checks inside your agent runtime or via a "tool safety wrapper"/sidecar; the profile only cares that every Tool Action goes through this logic.
 
 For normative details: [SPEC.md](./SPEC.md).
 

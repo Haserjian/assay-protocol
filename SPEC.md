@@ -122,8 +122,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | **Amendment** | A constitutional change to the safety invariants, ratified through the law-change pipeline |
 | **Destructive / High-Impact** | Tool actions classified as HIGH or CRITICAL risk levels (see §2) |
 | **Ephemeral Environment** | A sandboxed, disposable execution context (e.g., temp container) that is destroyed after use |
-| **Ephemeral Attestation** | A declaration that a Tool Action is confined to an isolated, disposable scope with no access to production data, including environment_id, ephemeral_root, attested_by, and destroy_by fields |
+| **Ephemeral Attestation** | A declaration that a Tool Action is confined to an isolated, disposable scope with no access to production data, including environment_id, ephemeral_root, attested_by, destroy_by, and isolation_claims (e.g., `["no_prod_data", "network_isolated"]`) |
 | **Consequential Action** | A Tool Action whose effects persist beyond the current process or episode (e.g., filesystem changes, database writes, network side effects). Read-only queries are not consequential for this profile. |
+| **ESCALATE (verdict)** | A Guardian decision indicating the action cannot be approved at the current authority level and requires higher-level approval. Treated as non-approval by the Tool Safety system; the action does not execute unless a subsequent ALLOW is obtained. |
 
 ---
 
@@ -168,6 +169,8 @@ Implementations SHOULD provide extensible pattern matching for domain-specific r
 Implementations MUST NOT downgrade CRITICAL default patterns in non-ephemeral environments. CRITICAL MUST remain CRITICAL unless an Ephemeral Attestation is present.
 
 Implementations MAY treat CRITICAL patterns as HIGH (but not lower) only when the action is confined to an explicitly declared Ephemeral Environment. **Risk MUST NOT be downgraded below HIGH for any CRITICAL default pattern, even in ephemeral environments.** Ephemeral attestations MUST NOT be reused across environments or persisted into production.
+
+An **Ephemeral Environment**, for the purpose of this downgrade, MUST be a genuinely isolated, disposable sandbox with no access to persistent production data, and MUST be destroyed after use. Labeling a normal or long-lived environment as "ephemeral" solely to weaken controls is non-conformant.
 
 When downgrading risk classification, implementations MUST:
 - Document the justification
@@ -226,6 +229,8 @@ The Guardian verdict MUST be cryptographically bound to the plan:
 - The verdict receipt MUST include a hash of the plan
 - Implementations MUST verify the binding before execution
 - Mismatched hashes MUST result in refusal
+
+**Execution Dependency:** Only a Guardian verdict of ALLOW (or an ESCALATE that is later resolved to ALLOW) permits execution. A verdict of DENY, or the absence of an ALLOW verdict by execution time, MUST be treated as a refusal: the action MUST NOT execute.
 
 ### 3.4 Violation Types
 
