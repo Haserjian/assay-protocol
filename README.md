@@ -91,7 +91,36 @@ This repo defines behaviors, not code. Implement in any language/framework. A co
 - receipt emitter
 - law-change validator
 
-See `IMPLEMENTORS.md` for checklists. A reference implementation exists separately; available for conformance testing on request.
+See `IMPLEMENTORS.md` for checklists.
+
+---
+
+## Design Partners & Commercial Support
+
+Building an agent runtime, IDE plugin, or automation tool with file/shell/db/network access? This repo is the *spec*; I help teams implement it.
+
+**Looking for 3–5 design partners** to validate CSP Tool Safety in real systems.
+
+### Available (scoped pilots)
+
+| Tier | Scope | Deliverables |
+|------|-------|--------------|
+| **CSP Basic Pilot** (2–3 days) | CRITICAL blocking + receipts for your top tool surface | Risk classification, pattern blocking, receipt emission, gap report |
+| **CSP Standard Pilot** (1–2 weeks) | Plans + Guardian verdicts + scope verification | Full §7.2 conformance tests, implementation guidance |
+| **Court-Grade Upgrade** (by scope) | Signed receipts, tri-temporal timestamps, audit export | Ed25519 signing, JCS canonicalization, optional TSA/Rekor anchoring |
+
+### What you get
+
+- Written **conformance plan** (Basic → Standard → Court-Grade path)
+- Runnable **conformance report** (PASS/FAIL per §7.2 behavior)
+- Example **receipt bundles** for auditors and incident response
+
+### Contact
+
+- **Preferred:** [Open a GitHub Issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) with label `design-partner`
+- **Maintainer:** Tim B. Haserjian (independent; entity formation pending)
+
+If you want "CSP-Conformant" as a differentiator after Antigravity/IDEsaster-class failures, this is the path.
 
 ---
 
