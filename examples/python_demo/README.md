@@ -58,8 +58,9 @@ python3 -m pytest test_classifier.py -v
 This is a **demo-grade** implementation for proof-of-concept purposes:
 
 - **No real execution** — commands are simulated, never run
-- **Demo-grade canonicalization** — not full RFC 8785 JCS
+- **Demo-grade canonicalization** — stable sort + compact JSON, not full RFC 8785 JCS (sufficient for local hash verification, not for cross-implementation interop)
 - **Simple scope matching** — uses glob/fnmatch, not path canonicalization
 - **Pattern-based classification** — regex only, no semantic analysis
+- **Timestamp ordering** — microsecond precision; extremely tight emission could theoretically collide (low risk)
 
 For production implementations, see [IMPLEMENTORS.md](../../IMPLEMENTORS.md).
