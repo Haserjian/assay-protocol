@@ -92,7 +92,7 @@ Receipts are written to `.csp_real_receipts/<episode_id>/`.
 
 This is a **demo-grade** implementation for proof-of-concept purposes:
 
-- **No real execution** — commands are simulated, never run
+- **Simulated vs real execution** — `demo.py` simulates (never runs commands); `real_exec/real_runner.py` performs actual deletes in a sandbox
 - **Demo-grade canonicalization** — stable sort + compact JSON, not full RFC 8785 JCS (sufficient for local hash verification, not for cross-implementation interop)
 - **Simple scope matching** — uses glob/fnmatch, not path canonicalization
 - **Pattern-based classification** — regex only, no semantic analysis
