@@ -26,6 +26,8 @@ This profile is part of the **Constitutional Safety Protocol (CSP-1.0)**, a gove
 
 The CSP-1.0 Core Specification is defined in a separate document and is normative for all profiles; this Tool Safety Profile inherits its receipt format, amendment process, and invariant framework from that core.
 
+**Note:** This Tool Safety Profile is **self-contained** and can be implemented standalone. Everything needed to build a conformant system is specified in §§1–7. The CSP Core Specification (receipt format, amendment process, invariant framework) will be published separately; adopters do not need it to implement this profile.
+
 ### 0.1 Founding Laws
 
 Established in the Genesis Receipt (November 8, 2025):
@@ -607,6 +609,12 @@ Amendments MUST progress through rings:
 2. **STAGING**: Real telemetry, < 5% false positive rate required
 3. **PRODUCTION**: Full enforcement, signed by Council
 
+### 6.5 Council Role
+
+The "Council" is the designated approver for law-change episodes. In multi-stakeholder deployments, this may be a governance committee or review board. **In single-operator or early-stage deployments, the Council role is fulfilled by the project maintainer(s) or designated safety owner.**
+
+Implementations MUST document who holds Council authority in their conformance statement.
+
 ---
 
 ## 7. Conformance [Normative]
@@ -857,3 +865,5 @@ These will be addressed in CSP-1.1 or a separate Federation Profile.
 ---
 
 *This specification is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: Tim B. Haserjian, Constitutional Safety Protocol Project.*
+
+*JSON schemas and code examples in this document are additionally licensed under [MIT](https://opensource.org/licenses/MIT) for implementation convenience.*
