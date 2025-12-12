@@ -8,7 +8,7 @@ Verifies:
 3. Verdicts bind to plans (plan_hash matches)
 
 Usage:
-    python3 examples/python_demo/verify_episode.py .csp_demo_receipts/<episode_id>
+    python3 examples/simulated/verify_episode.py .csp_demo_receipts/<episode_id>
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def load_receipts(ep_dir: Path) -> List[Dict[str, Any]]:
 
 def main() -> None:
     if len(sys.argv) != 2:
-        print("Usage: python3 examples/python_demo/verify_episode.py .csp_demo_receipts/<episode_id>")
+        print("Usage: python3 examples/simulated/verify_episode.py .csp_demo_receipts/<episode_id>")
         sys.exit(2)
 
     ep_dir = Path(sys.argv[1])

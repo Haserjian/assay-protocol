@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Unit tests for the risk classifier.
-Run with: python3 -m pytest examples/python_demo/test_classifier.py -v
+Run with: python3 -m pytest examples/simulated/test_classifier.py -v
 """
 import pytest
 from csp_demo.tool_safety import classify
