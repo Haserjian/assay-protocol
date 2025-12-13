@@ -42,6 +42,8 @@ A spec + reference implementation for MCP gateways that:
 reference/python_gateway/
 ├── src/csp_gateway/
 │   ├── gateway.py      # Main orchestration
+│   ├── types.py        # Core types + enums
+│   ├── registry.py     # MUST 1: Tool inventory
 │   ├── authn.py        # MUST 2: Authentication
 │   ├── authz.py        # MUST 3+4: Discovery + AuthZ
 │   ├── credentials.py  # MUST 5: No token passthrough

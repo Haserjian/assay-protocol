@@ -3,7 +3,8 @@
 import json
 from pathlib import Path
 from typing import Callable
-from .types import Receipt, Principal, Decision, TokenHandling, hash_args
+
+from .types import Decision, Principal, Receipt, TokenHandling, hash_args
 
 
 class ReceiptEmitter:

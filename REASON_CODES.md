@@ -41,7 +41,7 @@ Canonical reason codes for policy decisions. All conformance tests assert agains
 ## Usage
 
 ```python
-from csp_gateway.reason_codes import ReasonCode
+from csp_gateway.types import ReasonCode
 
 # In policy decisions
 decision = Decision(

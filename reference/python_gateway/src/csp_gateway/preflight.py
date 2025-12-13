@@ -1,8 +1,9 @@
 """Preflight Validation - MUST 7: Validation + guardrails."""
 
-from dataclasses import dataclass
 import json
-from pathlib import Path, PurePosixPath
+from dataclasses import dataclass
+from pathlib import Path
+
 from .types import Decision, DecisionResult, ReasonCode
 
 
@@ -93,7 +94,7 @@ class PreflightValidator:
                 target = Path(path).resolve()
 
             # Check if target is within workspace
-            return str(target).startswith(str(self._workspace))
+            return target.is_relative_to(self._workspace)
         except (ValueError, OSError):
             return False
 

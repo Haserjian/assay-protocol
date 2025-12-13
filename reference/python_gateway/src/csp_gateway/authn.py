@@ -1,7 +1,8 @@
 """Authentication - MUST 2: AuthN on every request."""
 
 from dataclasses import dataclass
-from .types import Principal, Decision, DecisionResult, ReasonCode
+
+from .types import Decision, DecisionResult, Principal, ReasonCode
 
 
 @dataclass

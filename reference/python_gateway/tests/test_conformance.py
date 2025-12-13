@@ -10,7 +10,6 @@ Test IDs from CONTROL_MAP.md:
 - INC-01: Kill switch
 """
 
-import pytest
 from csp_gateway.types import DecisionResult, ReasonCode
 
 

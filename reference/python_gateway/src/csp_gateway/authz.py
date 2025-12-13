@@ -1,15 +1,16 @@
 """Authorization - MUST 3 & 4: Identity-bound discovery + Runtime AuthZ."""
 
 from dataclasses import dataclass, field
+
+from .registry import ToolRegistry
 from .types import (
-    Principal,
-    ToolEntry,
     Decision,
     DecisionResult,
+    Principal,
     ReasonCode,
     RiskCategory,
+    ToolEntry,
 )
-from .registry import ToolRegistry
 
 
 @dataclass
@@ -137,7 +138,9 @@ class PolicyEngine:
             )
 
         # Check risk level
-        risk_order = [RiskCategory.LOW, RiskCategory.MEDIUM, RiskCategory.HIGH, RiskCategory.CRITICAL]
+        risk_order = [
+            RiskCategory.LOW, RiskCategory.MEDIUM, RiskCategory.HIGH, RiskCategory.CRITICAL
+        ]
         if risk_order.index(tool.risk_category) > risk_order.index(perm.max_risk):
             return Decision(
                 result=DecisionResult.REQUIRE_APPROVAL,

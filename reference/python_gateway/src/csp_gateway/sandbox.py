@@ -73,7 +73,7 @@ class SandboxExecutor:
             else:
                 target = Path(path).resolve()
 
-            return str(target).startswith(str(self._workspace))
+            return target.is_relative_to(self._workspace)
         except (ValueError, OSError):
             return False
 
@@ -87,7 +87,7 @@ class SandboxExecutor:
         else:
             target = Path(path).resolve()
 
-        if not str(target).startswith(str(self._workspace)):
+        if not target.is_relative_to(self._workspace):
             raise SandboxViolation(f"Path escapes workspace: {path}")
 
         return target

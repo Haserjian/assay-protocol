@@ -1,6 +1,6 @@
 """Tool Registry - MUST 1: Capability inventory + trust classification."""
 
-from .types import ToolEntry, TrustLevel, RiskCategory
+from .types import RiskCategory, ToolEntry, TrustLevel
 
 
 class ToolRegistry:

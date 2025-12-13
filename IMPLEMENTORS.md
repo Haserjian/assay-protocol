@@ -4,6 +4,8 @@ Use this as a checklist. If you can check every box in your chosen tier, you can
 
 You can enforce these checks inside your agent runtime or via a "tool safety wrapper"/sidecar; the profile only cares that every Tool Action goes through this logic.
 
+**For MCP gateway implementers:** See [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md) for 9 MCP-specific MUSTs and [reference/python_gateway/](./reference/python_gateway/) for a working implementation with 22 passing conformance tests.
+
 For normative details: [SPEC.md](./SPEC.md).
 
 ---
@@ -143,6 +145,25 @@ For normative details: [SPEC.md](./SPEC.md).
 *These timelines assume a small team with existing agent/tooling infrastructure. If you're starting from scratch, double them.*
 
 Each step is valuable alone; you don't have to jump to Court-Grade immediately.
+
+---
+
+## MCP Gateway Conformance
+
+For MCP gateways specifically, additional controls apply:
+
+- [ ] **MUST 3:** Identity-bound `tools/list` filtering
+- [ ] **MUST 5:** No token passthrough to upstream servers
+- [ ] **MUST 6:** OAuth proxy safety (if applicable)
+
+See [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md) for full requirements and [CONTROL_MAP.md](./CONTROL_MAP.md) for the MUST → Module → Test mapping.
+
+Run the reference implementation tests:
+```bash
+cd reference/python_gateway
+PYTHONPATH=src pytest tests/ -v
+# 22 passed
+```
 
 ---
 

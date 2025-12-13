@@ -105,6 +105,11 @@ CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frame
 - Emit action/refusal receipts
 - Then add plans + Guardian for HIGH/CRITICAL
 
+**If you're building an MCP gateway:**
+- See [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md) for 9 MUSTs
+- Run the [reference implementation](./reference/python_gateway/) to see it working
+- Use `make test` to verify 22 conformance tests pass
+
 **If you're security/compliance:**
 - Require Basic for any AI touching prod
 - Require Standard for exposed products
@@ -119,6 +124,9 @@ CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frame
 ## 8) Links
 
 - **Full spec:** [SPEC.md](./SPEC.md)
+- **MCP Gateway Profile:** [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md)
+- **Reference implementation:** [reference/python_gateway/](./reference/python_gateway/)
+- **Control mapping:** [CONTROL_MAP.md](./CONTROL_MAP.md)
 - **Incident walkthrough:** [incidents/ANTIGRAVITY.md](./incidents/ANTIGRAVITY.md)
 - **Implementor checklists:** [IMPLEMENTORS.md](./IMPLEMENTORS.md)
 - **Questions / conformance testing:** [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)

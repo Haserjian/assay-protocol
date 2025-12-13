@@ -1,15 +1,15 @@
 """Pytest fixtures for conformance tests."""
 
-import pytest
-import tempfile
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pytest
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from csp_gateway.gateway import MCPGateway, GatewayConfig
-from csp_gateway.types import TrustLevel, RiskCategory
+from csp_gateway.gateway import GatewayConfig, MCPGateway
+from csp_gateway.types import TrustLevel
 
 
 @pytest.fixture
