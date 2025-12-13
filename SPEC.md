@@ -6,7 +6,7 @@
 **Version:** 1.0.0-rc1
 **Date:** December 10, 2025
 **Author:** Tim B. Haserjian
-**Witness:** Constitutional Genesis Receipt `eb14026e...` (see CONSTITUTIONAL_HISTORY.md)
+**Witness:** Constitutional Genesis Receipt `eb14026e...`
 
 ---
 
@@ -332,13 +332,16 @@ The `ToolSafetyReceipt` is OPTIONAL as a distinct type and MAY be implemented as
   "ts": "2025-12-10T14:30:00Z",
   "action_id": "act-2025-001",
   "tool": "run_terminal_cmd",
-  "args": {"command": "rm -rf /var/cache/old/*"},
+  "args_hash": "sha256:a1b2c3d4e5f6...",
+  "args_redacted": {"command": "rm -rf /var/cache/old/*"},
   "risk_level": "CRITICAL",
   "outcome": "executed",
   "plan_id": "plan-2025-042",
   "verdict_id": "verdict-2025-042"
 }
 ```
+
+**Note:** The `args_redacted` field contains a human-readable preview. Commands without secrets MAY appear unchanged; commands with secrets MUST replace secret values with `[REDACTED]`. See §4.6.
 
 **Example `GuardianVerdictReceipt`** (required for Standard+ conformance):
 
@@ -463,6 +466,18 @@ Receipts generated under this profile SHOULD include:
 During the release candidate period, receipts SHOULD bind to the RC version (e.g., `1.0.0-rc1`). Upon final release, implementations SHOULD update to the release version (e.g., `1.0.0`).
 
 This enables forward compatibility as the profile evolves and allows auditors to determine which spec version governs a receipt.
+
+### 4.6 Receipt Privacy
+
+Receipts MUST NOT persist raw secrets, credentials, or personally identifiable information (PII) in their arguments. Instead:
+
+- **Arguments containing secrets**: Store as `args_hash` (SHA-256 of canonical JSON) plus `args_redacted` (preview with secrets replaced by `[REDACTED]`)
+- **File paths**: MAY be stored in full unless they reveal secrets
+- **Environment variables**: MUST redact values of known secret patterns (`*_KEY`, `*_SECRET`, `*_TOKEN`, `*_PASSWORD`)
+
+**Rationale:** Audit logs become liabilities when they contain secrets or PII. This requirement ensures receipts remain auditable without creating new attack surfaces.
+
+Implementations SHOULD provide a configurable redaction policy. Implementations MAY store encrypted argument blobs for forensic access with appropriate key management.
 
 ---
 
@@ -663,21 +678,25 @@ The reference implementation provides pytest suites demonstrating these behavior
 
 ### 7.3 Reference Test Suite
 
-The reference implementation includes example test suites:
+This repository includes a reference implementation with conformance tests:
 
 ```bash
-# Basic conformance
-tests/governance/test_tool_safety_invariant.py
+# Location
+reference/python_gateway/tests/test_conformance.py
 
-# Standard conformance (adds receipt chain validation)
-tests/receipts/domains/test_tool_safety_amendment.py
-
-# Court-grade conformance (adds signing + full validation)
-tests/receipts/test_signing_enforcement.py
-tests/organism/test_execution_spine_lineage.py
+# Test categories (22 tests total)
+# AUTH-01/02: Authentication enforcement
+# DISC-01/02: Identity-bound tool discovery
+# AUTHZ-01/02/03: Authorization deny-by-default
+# CRED-01/02/03/04: Credential boundary (no passthrough)
+# VAL-01/02/03/04: Preflight validation
+# RCPT-01/02/03: Receipt emission and integrity
+# INC-01/02/03: Incident mode / kill switch
 ```
 
-These files are EXAMPLES. Other implementations MUST provide equivalent test coverage for the behaviors listed in §7.2, even if their test names, structure, or language differ.
+Run with: `cd reference/python_gateway && PYTHONPATH=src pytest tests/ -v`
+
+Other implementations MUST provide equivalent test coverage for the behaviors listed in §7.2, even if their test names, structure, or language differ.
 
 ---
 
@@ -786,10 +805,11 @@ This profile's scope is operational safety. Implementors remain responsible for 
 
 | Document | Purpose |
 |----------|---------|
-| `CONSTITUTIONAL_HISTORY.md` | Genesis + all ratified amendments |
-| `CONSTITUTIONAL_AMENDMENT_KIT.md` | How to create new amendments |
-| `CSP_EXPLAINED.md` | Comprehensive system explanation |
-| `GO_TO_MARKET_CHECKLIST.md` | Adoption roadmap |
+| `FOR_HUMANS.md` | Plain-English explainer of CSP Tool Safety |
+| `IMPLEMENTORS.md` | Adoption checklists for Basic/Standard/Court-Grade |
+| `MCP_MINIMUM_PROFILE.md` | MCP gateway conformance requirements |
+| `CONTROL_MAP.md` | MUST → Hook → Module → Test mapping |
+| `incidents/ANTIGRAVITY.md` | Case study: drive deletion incident |
 
 ### B. Amendments Covered
 
@@ -823,7 +843,7 @@ This profile aligns with and can be mapped to existing AI governance frameworks:
 
 | RMF Function | CSP Implementation |
 |--------------|-------------------|
-| GOVERN | Constitutional laws + Council + CONSTITUTIONAL_HISTORY |
+| GOVERN | Constitutional laws + Council + amendment pipeline (§6) |
 | MAP | Episodes + risk classification + lab fixtures |
 | MEASURE | SandboxRunReceipts + lab metrics |
 | MANAGE | Enforcement in ToolSafetyWrapper + amendment pipeline |
