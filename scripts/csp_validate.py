@@ -208,10 +208,12 @@ def check_refusal_receipts(receipts: list[dict]) -> CheckResult:
         reason = payload.get("reason", "") or payload.get("reason_code", "")
 
         # Is this a refusal receipt?
+        # Note: decision_result == "deny" is NOT sufficient - that just means
+        # the decision was to deny, not that this IS a refusal receipt.
+        # Refusal receipts must be explicitly typed or have refusal outcomes.
         is_refusal = (
             "refusal" in receipt_type.lower() or
-            outcome in ("denied", "blocked", "refused") or
-            decision_result == "deny"
+            outcome in ("denied", "blocked", "refused")
         )
 
         # Is this a denial that should have a refusal receipt?
