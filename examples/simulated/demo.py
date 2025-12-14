@@ -67,7 +67,7 @@ def main() -> None:
     )
     print(f"   {out4['status']} {out4.get('reason', '')}")
 
-    print(f"\nDone. Verify receipts with:")
+    print("\nDone. Verify receipts with:")
     print(f"   python3 examples/simulated/verify_episode.py {receipts_root / ep.episode_id}\n")
 
 

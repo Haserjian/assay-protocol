@@ -544,6 +544,9 @@ def main():
 
     status = "PASS" if report.overall_pass else "FAIL"
     print(f"Overall: [{status}]")
+    if report.overall_pass:
+        print("Your implementation is CSP conformant. Guardian verified all controls.")
+    print()
     print(f"Receipts validated: {report.receipt_count}")
     print(f"Checks passed: {len(report.checks) - report.error_count}/{len(report.checks)}")
     print()

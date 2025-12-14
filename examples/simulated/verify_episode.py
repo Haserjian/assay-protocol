@@ -64,21 +64,21 @@ def main() -> None:
             print(f"      expected={prev}")
             sys.exit(1)
         prev = r.get("receipt_hash")
-    print(f"[OK] Receipt chain valid (parent_hash linkage)")
+    print("[OK] Receipt chain valid (parent_hash linkage)")
 
     # 3) Verify verdict binds to plan (if both exist)
     plan_hashes = {r["receipt_hash"] for r in receipts if r.get("receipt_type") == "csp.tool_safety.plan.v1"}
     verdicts = [r for r in receipts if r.get("receipt_type") == "csp.tool_safety.verdict.v1"]
     for v in verdicts:
         if v.get("plan_hash") not in plan_hashes:
-            print(f"FAIL: VERDICT NOT BOUND to plan")
+            print("FAIL: VERDICT NOT BOUND to plan")
             print(f"      verdict: {v.get('receipt_id')}")
             print(f"      plan_hash: {v.get('plan_hash')}")
             sys.exit(1)
     if verdicts:
         print(f"[OK] {len(verdicts)} verdict(s) correctly bound to plans")
 
-    print(f"\nVERIFIED: hashes valid, chain valid, verdicts bound.")
+    print("\nVERIFIED: hashes valid, chain valid, verdicts bound.")
 
 
 if __name__ == "__main__":
