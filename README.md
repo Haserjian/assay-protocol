@@ -47,6 +47,41 @@ A spec + reference implementation for MCP gateways that:
 | [schemas/receipt.schema.json](schemas/receipt.schema.json) | JSON Schema for receipts |
 | [conformance/](conformance/) | How to claim conformance |
 
+**Strategic (CODE RED):**
+| File | Purpose |
+|------|---------|
+| [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Open RFC for portable receipts (JCS, Ed25519, anchoring) |
+| [ANTI_AGENT_MANIFESTO.md](ANTI_AGENT_MANIFESTO.md) | Positioning: "Agents are apps, governance is infrastructure" |
+
+## Tooling
+
+### csp-validate: Conformance Checker
+
+```bash
+# Validate receipts and generate report + badge
+python scripts/csp_validate.py path/to/receipts/ -o report.json --badge badge.svg
+
+# Output:
+# - PASS/FAIL for 7 conformance checks
+# - JSON report (optionally signed)
+# - SVG badge for embedding
+```
+
+### crypto_core: Receipt Signing
+
+```bash
+# Generate Ed25519 keypair
+python scripts/crypto_core.py keygen --key-id my-operator -o keys/
+
+# Sign a receipt
+python scripts/crypto_core.py sign receipt.json --key keys/my-operator.private.json
+
+# Verify chain
+python scripts/crypto_core.py verify r1.json r2.json r3.json --keys public_keys.json
+```
+
+> **Note:** Install `cryptography` for real Ed25519 signatures: `pip install cryptography`
+
 ## Reference Implementation
 
 ```

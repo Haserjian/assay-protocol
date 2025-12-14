@@ -14,7 +14,9 @@ This is the foundation for court-grade proof.
 import hashlib
 import json
 import base64
+import sys
 import uuid
+import warnings
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
@@ -30,7 +32,11 @@ try:
     HAS_CRYPTO = True
 except ImportError:
     HAS_CRYPTO = False
-    print("Warning: cryptography library not installed. Signing will be simulated.")
+    warnings.warn(
+        "cryptography library not installed. Signing will be simulated.",
+        UserWarning,
+        stacklevel=1,
+    )
 
 
 # =============================================================================

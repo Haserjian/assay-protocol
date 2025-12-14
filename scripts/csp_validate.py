@@ -26,22 +26,16 @@ from typing import Optional
 # Import crypto core
 try:
     from crypto_core import (
-        canonical_hash,
         verify_receipt_hash,
         verify_chain,
-        generate_keypair,
-        sign_receipt,
         create_receipt,
     )
 except ImportError:
     # Handle running from different directory
     sys.path.insert(0, str(Path(__file__).parent))
     from crypto_core import (
-        canonical_hash,
         verify_receipt_hash,
         verify_chain,
-        generate_keypair,
-        sign_receipt,
         create_receipt,
     )
 
