@@ -138,7 +138,7 @@ def check_hash_integrity(receipts: list[dict]) -> CheckResult:
         check_name="Receipt Hash Integrity",
         passed=valid_count == total,
         details=f"{valid_count}/{total} receipts have valid hashes",
-        evidence=f"Verified via JCS canonicalization + SHA-256",
+        evidence="Verified via JCS canonicalization + SHA-256",
     )
 
 
@@ -502,7 +502,7 @@ def main():
         with open(args.sign) as f:
             key_data = json.load(f)
 
-        from crypto_core import KeyPair, sign_receipt
+        from crypto_core import KeyPair
 
         keypair = KeyPair(
             key_id=key_data["key_id"],

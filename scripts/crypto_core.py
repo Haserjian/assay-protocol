@@ -14,7 +14,6 @@ This is the foundation for court-grade proof.
 import hashlib
 import json
 import base64
-import sys
 import uuid
 import warnings
 from datetime import datetime, timezone
