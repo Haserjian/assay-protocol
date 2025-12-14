@@ -58,7 +58,7 @@ class TestDiscovery:
         assert "tool_x" in tool_names
 
     def test_disc_different_principals_see_different_tools(self, gateway, alice_token, bob_token):
-        """Different principals see different tool sets."""
+        """DISC-03: Different principals see different tool sets."""
         alice_tools, _, _ = gateway.handle_tools_list(token=alice_token)
         bob_tools, _, _ = gateway.handle_tools_list(token=bob_token)
 
@@ -101,7 +101,7 @@ class TestAuthorization:
         assert ReasonCode.DENY_NO_MATCHING_RULE in decision.reason_codes
 
     def test_authz_permitted_tool_allowed(self, gateway, alice_token):
-        """Permitted tool is allowed."""
+        """AUTHZ-03: Permitted tool is allowed."""
         decision, receipt = gateway.handle_tools_call(
             token=alice_token,
             tool_name="tool_x",
@@ -138,7 +138,7 @@ class TestCredentials:
         assert handling.audience == "server_b"
 
     def test_cred_passthrough_blocked(self, gateway, alice_token):
-        """Passthrough attempt is blocked."""
+        """CRED-03: Passthrough attempt is blocked."""
         # Try to get credential for unconfigured server
         credential, handling = gateway.credentials.get_upstream_credential(
             alice_token, "unconfigured_server"
@@ -148,7 +148,7 @@ class TestCredentials:
         assert handling.passthrough_detected is True
 
     def test_cred_passthrough_blocked_in_request(self, gateway, alice_token):
-        """Passthrough blocked during tools/call returns DENY_PASSTHROUGH_BLOCKED."""
+        """CRED-04: Passthrough blocked during tools/call returns DENY_PASSTHROUGH_BLOCKED."""
         # Register a tool on unconfigured server
         gateway.registry.register("unconfigured_server", "dangerous_tool")
         gateway.authz.grant("alice", ["dangerous_tool"])
@@ -205,7 +205,7 @@ class TestValidation:
         assert ReasonCode.DENY_PATH_TRAVERSAL in decision.reason_codes
 
     def test_val_valid_path_allowed(self, gateway, alice_token, workspace):
-        """Valid workspace path is allowed."""
+        """VAL-04: Valid workspace path is allowed."""
         # Create a file in workspace
         test_file = workspace / "test.txt"
         test_file.write_text("hello")
@@ -246,7 +246,7 @@ class TestReceipts:
         assert receipt.token_handling.passthrough_detected is False
 
     def test_rcpt_deny_emits_receipt(self, gateway, invalid_token):
-        """Denied requests also emit receipts."""
+        """RCPT-02: Denied requests also emit receipts."""
         gateway.receipts.clear()
 
         decision, receipt = gateway.handle_tools_call(
@@ -259,7 +259,7 @@ class TestReceipts:
         assert receipt.decision.result == DecisionResult.DENY
 
     def test_rcpt_stored(self, gateway, alice_token):
-        """Receipts are stored and retrievable."""
+        """RCPT-03: Receipts are stored and retrievable."""
         gateway.receipts.clear()
 
         gateway.handle_tools_call(
@@ -295,7 +295,7 @@ class TestIncident:
         assert ReasonCode.DENY_KILL_SWITCH in decision.reason_codes
 
     def test_inc_kill_switch_other_tools_unaffected(self, gateway, alice_token):
-        """Kill switch only affects specified tools."""
+        """INC-02: Kill switch only affects specified tools."""
         gateway.authz.activate_kill_switch(["tool_x"])
 
         # tool_y should still work
@@ -308,7 +308,7 @@ class TestIncident:
         assert decision.result == DecisionResult.ALLOW
 
     def test_inc_kill_switch_deactivate(self, gateway, alice_token):
-        """Kill switch can be deactivated."""
+        """INC-03: Kill switch can be deactivated."""
         gateway.authz.activate_kill_switch(["tool_x"])
         gateway.authz.deactivate_kill_switch(["tool_x"])
 

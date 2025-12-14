@@ -36,3 +36,8 @@ jobs:
         run: |
           cd reference/python_gateway
           ruff check src/ tests/
+
+      - name: Run RitualLint
+        run: |
+          pip install pyyaml
+          python scripts/ritual_lint.py

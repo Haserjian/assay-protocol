@@ -1,0 +1,212 @@
+# CSP Control Map - Canonical Source
+# This file is the single source of truth for MUST -> Test -> Evidence mappings
+# Run `python scripts/ritual_lint.py` to validate consistency
+
+meta:
+  version: "1.0.0"
+  unit_test_count: 22
+  integration_test_count: 5
+  test_file: "reference/python_gateway/tests/test_conformance.py"
+
+musts:
+  - id: "MUST_1"
+    name: "Tool Inventory"
+    control: "Tool inventory + trust"
+    hook: "Server registration"
+    module: "registry.py"
+    unit_tests: []  # Explicitly empty - static registry, no runtime test
+    integration_tests: []
+    evidence:
+      - "mcp.trust_level"
+    notes: "Static registry loading; no runtime conformance test"
+
+  - id: "MUST_2"
+    name: "AuthN + TLS"
+    control: "Authentication on every request"
+    hook: "Gateway edge"
+    module: "authn.py"
+    unit_tests:
+      - id: "AUTH-01"
+        assertion: "Missing token returns DENY_NO_AUTHN"
+        reason_code: "DENY_NO_AUTHN"
+      - id: "AUTH-02"
+        assertion: "Invalid token returns DENY_NO_AUTHN"
+        reason_code: "DENY_NO_AUTHN"
+    integration_tests:
+      - id: "TLS-01"
+        assertion: "Non-TLS connection rejected"
+        environment: "Deployment with TLS termination"
+    evidence:
+      - "principal.sub"
+      - "principal.actor_type"
+
+  - id: "MUST_3"
+    name: "Identity-bound Discovery"
+    control: "Identity-bound tool discovery"
+    hook: "tools/list response"
+    module: "authz.py:can_discover()"
+    unit_tests:
+      - id: "DISC-01"
+        assertion: "Unpermitted tool excluded from tools/list"
+        reason_code: null
+      - id: "DISC-02"
+        assertion: "Permitted tool included in tools/list"
+        reason_code: null
+      - id: "DISC-03"
+        assertion: "Different principals see different tools"
+        reason_code: null
+    integration_tests: []
+    evidence:
+      - "(filtered response)"
+
+  - id: "MUST_4"
+    name: "Runtime AuthZ"
+    control: "Runtime authorization per invocation"
+    hook: "tools/call handler"
+    module: "authz.py:evaluate()"
+    unit_tests:
+      - id: "AUTHZ-01"
+        assertion: "Unknown tool returns DENY_TOOL_NOT_FOUND"
+        reason_code: "DENY_TOOL_NOT_FOUND"
+      - id: "AUTHZ-02"
+        assertion: "No matching rule returns DENY_NO_MATCHING_RULE"
+        reason_code: "DENY_NO_MATCHING_RULE"
+      - id: "AUTHZ-03"
+        assertion: "Permitted tool returns ALLOW"
+        reason_code: "ALLOW_POLICY_MATCH"
+    integration_tests: []
+    evidence:
+      - "decision.result"
+      - "decision.reason_codes"
+
+  - id: "MUST_5"
+    name: "Credential Boundary"
+    control: "No token passthrough"
+    hook: "Upstream dispatch"
+    module: "credentials.py"
+    unit_tests:
+      - id: "CRED-01"
+        assertion: "Upstream token != client token"
+        reason_code: null
+      - id: "CRED-02"
+        assertion: "Upstream token has correct audience"
+        reason_code: null
+      - id: "CRED-03"
+        assertion: "Passthrough attempt blocked (explicit)"
+        reason_code: null
+      - id: "CRED-04"
+        assertion: "Passthrough attempt blocked (in request)"
+        reason_code: "DENY_PASSTHROUGH_BLOCKED"
+    integration_tests: []
+    evidence:
+      - "token_handling.mode"
+      - "token_handling.passthrough_detected"
+      - "token_handling.audience"
+
+  - id: "MUST_6"
+    name: "OAuth Proxy Safety"
+    control: "OAuth redirect/client validation"
+    hook: "OAuth endpoints"
+    module: null  # N/A - reference gateway does not proxy OAuth
+    unit_tests: []
+    integration_tests:
+      - id: "OAUTH-01"
+        assertion: "Invalid redirect URI rejected"
+        environment: "OAuth proxy configuration"
+      - id: "OAUTH-02"
+        assertion: "Unapproved dynamic client rejected"
+        environment: "OAuth proxy configuration"
+    evidence:
+      - "decision.reason_codes"
+    notes: "Reference gateway does not proxy OAuth; implementations that do MUST pass OAUTH-01/02"
+
+  - id: "MUST_7"
+    name: "Preflight Validation"
+    control: "Input validation before dispatch"
+    hook: "Pre-dispatch"
+    module: "preflight.py"
+    unit_tests:
+      - id: "VAL-01"
+        assertion: "Unknown fields rejected"
+        reason_code: "DENY_UNKNOWN_FIELDS"
+      - id: "VAL-02"
+        assertion: "Oversized payload rejected"
+        reason_code: "DENY_PAYLOAD_TOO_LARGE"
+      - id: "VAL-03"
+        assertion: "Path traversal rejected"
+        reason_code: "DENY_PATH_TRAVERSAL"
+      - id: "VAL-04"
+        assertion: "Valid path within workspace allowed"
+        reason_code: null
+    integration_tests: []
+    evidence:
+      - "decision.reason_codes"
+
+  - id: "MUST_8"
+    name: "Sandbox Boundaries"
+    control: "Filesystem + Network isolation"
+    hook: "Executor"
+    module: "sandbox.py"
+    unit_tests: []  # Sandbox enforcement requires OS/container - not unit testable
+    integration_tests:
+      - id: "SAND-01"
+        assertion: "Write outside workspace fails"
+        environment: "Sandbox runtime"
+      - id: "NET-01"
+        assertion: "Non-allowlisted egress blocked"
+        environment: "Network policy enforcement"
+    evidence:
+      - "sandbox.fs_policy"
+      - "sandbox.net_policy"
+    notes: "Sandbox enforcement requires OS/container/VM level - not Python code"
+
+  - id: "MUST_9"
+    name: "Receipts + Incident"
+    control: "Audit trail and kill switch"
+    hook: "All paths"
+    module: "receipts.py, incident.py"
+    unit_tests:
+      - id: "RCPT-01"
+        assertion: "Every tools/call emits valid receipt"
+        reason_code: null
+      - id: "RCPT-02"
+        assertion: "Denied request emits receipt"
+        reason_code: null
+      - id: "RCPT-03"
+        assertion: "Receipt stored and retrievable"
+        reason_code: null
+      - id: "INC-01"
+        assertion: "Kill switch denies with DENY_KILL_SWITCH"
+        reason_code: "DENY_KILL_SWITCH"
+      - id: "INC-02"
+        assertion: "Kill switch only affects targeted tool"
+        reason_code: null
+      - id: "INC-03"
+        assertion: "Kill switch can be deactivated"
+        reason_code: null
+    integration_tests: []
+    evidence:
+      - "(the receipt itself)"
+
+# Reason codes that MUST be used in tests (from REASON_CODES.md)
+canonical_reason_codes:
+  allow:
+    - "ALLOW_POLICY_MATCH"
+  deny_auth:
+    - "DENY_NO_AUTHN"
+    - "DENY_INVALID_TOKEN"
+    - "DENY_NO_PERMISSION"
+    - "DENY_TOOL_NOT_FOUND"
+    - "DENY_NO_MATCHING_RULE"
+  deny_validation:
+    - "DENY_UNKNOWN_FIELDS"
+    - "DENY_PAYLOAD_TOO_LARGE"
+    - "DENY_PATH_TRAVERSAL"
+    - "DENY_RATE_LIMIT"
+  deny_security:
+    - "DENY_KILL_SWITCH"
+    - "DENY_PASSTHROUGH_BLOCKED"
+    - "DENY_OAUTH_REDIRECT_INVALID"
+    - "DENY_OAUTH_CLIENT_UNAPPROVED"
+  approval:
+    - "REQUIRE_APPROVAL"
