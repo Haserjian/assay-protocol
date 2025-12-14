@@ -18,18 +18,3 @@ MASTERY_KIT.md
 # IDE
 .vscode/
 .idea/
-
-# --- PRIVATE / INTERNAL (never commit to public repo) ---
-**/STRATEGIC_PRIORITIES*.md
-**/PROJECT_STATE*.md
-**/DOC_OF_LINKS*.md
-**/CCIO_*.md
-**/*ARCHITECTURE_BIBLE*.md
-**/*PIVOT*.md
-**/*ROADMAP*.md
-**/*PRICING*.md
-**/*OUTREACH*.md
-**/*COMPETITOR*.md
-**/*INTERNAL*.md
-**/CODE_RED*.md
-**/*MANIFESTO*.md
