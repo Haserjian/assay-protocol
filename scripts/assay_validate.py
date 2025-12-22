@@ -578,7 +578,7 @@ def main():
 
         # Create a receipt for the report itself
         report_receipt = create_receipt(
-            receipt_type="csp.conformance_report/v1",
+            receipt_type="assay.conformance_report/v1",
             payload=report_dict,
             proof_tier="core",
             keypair=keypair,

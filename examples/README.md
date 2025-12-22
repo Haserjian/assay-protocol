@@ -16,17 +16,17 @@ Two proof-of-concept demos showing Assay behaviors.
 ```bash
 cd examples/simulated
 python3 demo.py
-python3 verify_episode.py .csp_demo_receipts/<episode_id>
+python3 verify_episode.py .assay_demo_receipts/<episode_id>
 ```
 
 ### Sandbox Demo (real deletes)
 
 ```bash
 cd examples/sandbox
-mkdir -p /tmp/csp_sandbox/old
-echo "test" > /tmp/csp_sandbox/old/test.txt
-python3 real_runner.py --mode basic --sandbox-root /tmp/csp_sandbox \
-  fs_delete --path /tmp/csp_sandbox/old
+mkdir -p /tmp/assay_sandbox/old
+echo "test" > /tmp/assay_sandbox/old/test.txt
+python3 real_runner.py --mode basic --sandbox-root /tmp/assay_sandbox \
+  fs_delete --path /tmp/assay_sandbox/old
 ```
 
 ## What These Prove

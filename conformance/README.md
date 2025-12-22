@@ -91,7 +91,7 @@ pytest tests/test_conformance.py -v --tb=short > conformance_report.txt
 ```
 
 Include in your documentation:
-- CSP version: `1.0.0-rc1`
+- Assay version: `1.0.0-rc1`
 - MCP Minimum Profile version: `0.1`
 - Test date and commit hash
 - Any N/A items with rationale
