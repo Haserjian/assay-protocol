@@ -18,3 +18,15 @@ MASTERY_KIT.md
 # IDE
 .vscode/
 .idea/
+
+# Secrets and credentials
+.env
+.env.*
+.envrc
+*.pem
+*.key
+secrets/
+credentials/
+
+# Ruff cache
+.ruff_cache/
