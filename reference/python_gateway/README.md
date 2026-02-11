@@ -33,6 +33,18 @@ pytest
 | 8 | `sandbox.py` | Workspace path boundary |
 | 9 | `receipts.py`, `incident.py` | Receipt emission + kill switch |
 
+## PCCap (CRITICAL Action Capabilities)
+
+`csp_gateway.pccap` adds signed, scoped, expiring capability tokens for
+high-risk actions that require explicit approval.
+
+- Signature validation (integrity + principal binding)
+- TTL expiry enforcement
+- Scope enforcement (tool/args/path)
+- Single-use replay protection (default-on)
+
+Threat model notes: `docs/PCCAP_THREAT_MODEL.md`
+
 ## Conformance Tests
 
 Tests in `tests/test_conformance.py` implement the test matrix from `CONTROL_MAP.md`:
