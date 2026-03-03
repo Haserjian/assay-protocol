@@ -1,0 +1,25 @@
+version: 1
+contract_name: public-baseline
+repo_tier: public
+
+invariants:
+  required_workflows:
+    - path: .github/workflows/test.yml
+      workflow_name: Tests
+      required_jobs:
+        - id: test
+          required_step_names:
+            - Install dependencies
+            - Run tests
+            - Run linter
+            - Run RitualLint
+          required_matrix:
+            key: python-version
+            values: ["3.10", "3.11", "3.12"]
+
+  required_uses:
+    - actions/checkout@v4
+    - actions/setup-python@v5
+
+policy:
+  require_pinned_uses: true
