@@ -1,33 +1,27 @@
 # Assay Protocol
 
-![Assay](https://img.shields.io/badge/Assay-22%2F22%20tests-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
+[![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)]()
+[![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-blue)](LICENSE)
 
-**Proof your agent didn't go rogue.**
-
-When your AI agent does something unexpected, you'll wish you had receipts. Assay gives you cryptographic proof of every tool action—what happened, who authorized it, and why.
+Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-evident receipts, kill switches.
 
 > *"Agents talk via MCP. Agents prove via Assay."*
 
----
-
-**What this is:** Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-evident receipts, kill switches.
+**What this is:** A specification and reference implementation for MCP gateway conformance — how to build gateways that produce cryptographic proof of every tool action.
 
 **What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
 
-**Spec:** v1.0.0-rc1 | **License:** CC BY 4.0 (text), MIT (code)
-
----
+**Spec:** v1.0.0-rc1
 
 ## Quick Start
 
 ```bash
-# Run conformance tests
 cd reference/python_gateway
 python3 -m venv .venv && source .venv/bin/activate
 pip install pytest
 PYTHONPATH=src pytest tests/ -v
 
-# 22 tests, ~0.04s
+# 52 tests, ~0.05s
 ```
 
 ## What You Get
@@ -35,9 +29,7 @@ PYTHONPATH=src pytest tests/ -v
 - **Proof when things go wrong:** Every tool action gets a receipt with timestamp, decision, and hash
 - **Deny-by-default protection:** Nothing executes without explicit policy approval
 - **Incident response:** Kill switch to disable compromised tools instantly
-- **Court-grade audit trail:** Signed receipts that hold up to scrutiny
-
-This is a spec + reference implementation for MCP gateways. 22 conformance tests verify the 9 MUSTs.
+- **Auditable trail:** Signed receipts with hash chains (Ed25519, JCS-canonical)
 
 ## Documents
 
@@ -58,6 +50,26 @@ This is a spec + reference implementation for MCP gateways. 22 conformance tests
 | [schemas/receipt.schema.json](schemas/receipt.schema.json) | JSON Schema for receipts |
 | [conformance/](conformance/) | How to claim conformance |
 | [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Receipt format spec (JCS, Ed25519, anchoring) |
+
+## Reference Implementation
+
+```
+reference/python_gateway/
+├── src/assay_gateway/
+│   ├── gateway.py      # Main orchestration
+│   ├── types.py        # Core types + enums
+│   ├── registry.py     # MUST 1: Tool inventory
+│   ├── authn.py        # MUST 2: Authentication
+│   ├── authz.py        # MUST 3+4: Discovery + AuthZ
+│   ├── credentials.py  # MUST 5: No token passthrough
+│   ├── preflight.py    # MUST 7: Validation
+│   ├── sandbox.py      # MUST 8: Boundaries
+│   ├── receipts.py     # MUST 9: Receipts
+│   └── incident.py     # MUST 9: Kill switch
+└── tests/
+    ├── test_conformance.py  # 22 conformance tests (9 MUSTs)
+    └── test_pccap.py        # 30 PCCap capability tests
+```
 
 ## Tooling
 
@@ -88,59 +100,31 @@ python scripts/crypto_core.py verify r1.json r2.json r3.json --keys public_keys.
 
 > **Note:** Install `cryptography` for real Ed25519 signatures: `pip install cryptography`
 
-## Reference Implementation
-
-```
-reference/python_gateway/
-├── src/assay_gateway/
-│   ├── gateway.py      # Main orchestration
-│   ├── types.py        # Core types + enums
-│   ├── registry.py     # MUST 1: Tool inventory
-│   ├── authn.py        # MUST 2: Authentication
-│   ├── authz.py        # MUST 3+4: Discovery + AuthZ
-│   ├── credentials.py  # MUST 5: No token passthrough
-│   ├── preflight.py    # MUST 7: Validation
-│   ├── sandbox.py      # MUST 8: Boundaries
-│   ├── receipts.py     # MUST 9: Receipts
-│   └── incident.py     # MUST 9: Kill switch
-└── tests/
-    └── test_conformance.py  # 22 conformance tests
-```
-
-## Conformance Tests (22 unit tests)
-
-| ID | MUST | Assertion |
-|----|------|-----------|
-| AUTH-01/02 | 2 | Missing/invalid token denied |
-| DISC-01/02/03 | 3 | Tool visibility filtered by principal |
-| AUTHZ-01/02/03 | 4 | Unknown tool / no rule denied; permitted allowed |
-| CRED-01/02/03/04 | 5 | No token passthrough; correct exchange |
-| VAL-01/02/03/04 | 7 | Unknown fields / size / path traversal rejected |
-| RCPT-01/02/03 | 9 | Every `tools/call` emits receipt; stored |
-| INC-01/02/03 | 9 | Kill switch denies tool; deactivates |
-
-See [CONTROL_MAP.md](CONTROL_MAP.md) for full test matrix.
-
 ## Who This Is For
 
 - **Security engineers** who need to prove agent behavior to their CISO
 - **Platform teams** building tool-using AI that needs guardrails
-- **Compliance teams** tired of checkbox audits that prove nothing
+- **Compliance teams** preparing for EU AI Act and SOC 2 AI audit requirements
 
-Not for you if: you want an agent framework, you want to ship fast without safety, you think "it probably won't delete prod" is good enough.
+## Related Repos
 
-## Design Partners
+| Repo | Purpose |
+|------|---------|
+| [assay](https://github.com/Haserjian/assay) | Core CLI + SDK — evidence compiler for AI systems |
+| [assay-verify-action](https://github.com/Haserjian/assay-verify-action) | GitHub Action for CI evidence verification |
+| [assay-ledger](https://github.com/Haserjian/assay-ledger) | Public transparency ledger |
+| [agentmesh](https://github.com/Haserjian/agentmesh) | Multi-agent coordination and provenance |
 
-Building an MCP gateway, agent runtime, or tool-using AI? I help teams implement Assay.
+## Links
 
-| Tier | What You Get | Timeline |
-|------|--------------|----------|
-| Basic Pilot | CRITICAL blocking + receipts | 2-3 days |
-| Standard Pilot | Full 9 MUSTs + conformance tests | 1-2 weeks |
-| Court-Grade | Signed receipts + audit export + conformance report | Custom |
-
-[Open an issue](https://github.com/Haserjian/assay-protocol/issues) with label `design-partner`.
+- [assay-ai on PyPI](https://pypi.org/project/assay-ai/)
+- [Assay source](https://github.com/Haserjian/assay)
+- [Assay Verify Action](https://github.com/Haserjian/assay-verify-action)
 
 ---
 
-*Created by Tim B. Haserjian. Part of the Assay Protocol (Assay-1.0) project.*
+*Part of the [Assay](https://github.com/Haserjian/assay) ecosystem. Created by Tim B. Haserjian.*
+
+## License
+
+CC BY 4.0 (specification text), MIT (reference implementation code).
