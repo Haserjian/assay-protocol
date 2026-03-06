@@ -17,7 +17,7 @@ Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-ev
 
 ```bash
 cd reference/python_gateway
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate   # Windows: py -m venv .venv && .venv\Scripts\activate
 pip install pytest
 PYTHONPATH=src pytest tests/ -v
 
