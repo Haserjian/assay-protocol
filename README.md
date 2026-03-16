@@ -1,9 +1,11 @@
 # Assay Protocol
 
+> Assay Protocol defines the verification contract for MCP gateways in the [Assay](https://github.com/Haserjian/assay) ecosystem.
+
 [![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)]()
 [![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-blue)](LICENSE)
 
-Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-evident receipts, kill switches.
+Assay Protocol is the spec and reference implementation for MCP gateways that can prove what tool-using AI systems did. It defines deny-by-default controls, tamper-evident receipts, and incident-response hooks for gateway-layer enforcement.
 
 > *"Agents talk via MCP. Agents prove via Assay."*
 
@@ -11,9 +13,13 @@ Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-ev
 
 **What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
 
+**Use this repo when:** you are building or auditing an MCP gateway and need to know what controls, receipts, and conformance hooks are required.
+
 **Spec:** v1.0.0-rc1
 
 ## Quick Start
+
+Fastest path: run the reference tests, then read `FOR_HUMANS.md` if you want the plain-English version before the spec.
 
 ```bash
 cd reference/python_gateway
