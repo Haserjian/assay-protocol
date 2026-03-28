@@ -9,7 +9,7 @@ Assay Protocol is the spec and reference implementation for MCP gateways that ca
 
 > *"Agents talk via MCP. Agents prove via Assay."*
 
-**What this is:** A specification and reference implementation for MCP gateway conformance — how to build gateways that produce cryptographic proof of every tool action.
+**What this is:** A specification and reference implementation for MCP gateway conformance - the gateway-side control profile for deny-by-default tool use, filtered discovery, validation boundaries, receipts, and incident response.
 
 **What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
 
@@ -19,7 +19,7 @@ Assay Protocol is the spec and reference implementation for MCP gateways that ca
 
 ## Quick Start
 
-Fastest path: run the reference tests, then read `FOR_HUMANS.md` if you want the plain-English version before the spec.
+Fastest path: run the reference conformance tests, then read `FOR_HUMANS.md` if you want the plain-English version before diving into the spec.
 
 ```bash
 cd reference/python_gateway
@@ -36,6 +36,8 @@ PYTHONPATH=src pytest tests/ -v
 - **Deny-by-default protection:** Nothing executes without explicit policy approval
 - **Incident response:** Kill switch to disable compromised tools instantly
 - **Auditable trail:** Signed receipts with hash chains (Ed25519, JCS-canonical)
+
+It is not a general agent framework and it is not the buyer-facing Assay artifact path.
 
 ## Documents
 
