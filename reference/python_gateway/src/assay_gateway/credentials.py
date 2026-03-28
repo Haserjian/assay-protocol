@@ -1,5 +1,7 @@
 """Credential Broker - MUST 5: Credential boundary (no token passthrough)."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from .types import Decision, DecisionResult, ReasonCode, TokenHandling, TokenMode

@@ -1,5 +1,7 @@
 """Authentication - MUST 2: AuthN on every request."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from .types import Decision, DecisionResult, Principal, ReasonCode

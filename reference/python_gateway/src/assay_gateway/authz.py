@@ -1,5 +1,7 @@
 """Authorization - MUST 3 & 4: Identity-bound discovery + Runtime AuthZ."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 from .registry import ToolRegistry

@@ -1,5 +1,7 @@
 """Tool Registry - MUST 1: Capability inventory + trust classification."""
 
+from __future__ import annotations
+
 from .types import RiskCategory, ToolEntry, TrustLevel
 
 
