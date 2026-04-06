@@ -23,7 +23,11 @@ This is a companion to [SPEC.md](./SPEC.md) and [CONSTITUTIONAL_RECEIPT_STANDARD
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
-### 0.1 Pinned Invariants
+### 0.1 Hash Encoding
+
+All hash fields in this profile use the prefixed format `sha256:<64-char-lowercase-hex>`. This applies to all cross-verifiable and local-attestation hashes in receipts, contracts, and dispute payloads. Verifiers MUST compare hashes as exact string equality on the prefixed form.
+
+### 0.2 Pinned Invariants
 
 **Episodes are the truth-bearing work unit. Proof packs are the compiled evidence artifact.**
 
@@ -144,7 +148,7 @@ Every hash field in the RCE receipt set MUST be recomputable by a second impleme
 | `env_fingerprint_hash` | `{provider, model_id, tool_versions, container_digest}` | JCS → SHA-256 | JCS key sort | §2.3 |
 | `inputs_hash` | `episode_contract["inputs"]` (full array) | JCS → SHA-256 | Array order from contract | `episode_open` |
 | `script_hash` | `episode_contract["replay_script"]` (full object) | JCS → SHA-256 | JCS key sort | `episode_open`, `replay_result` |
-| `outputs_hash` | Array of `{"step_id", "output_hash"}` per `EMIT_OUTPUT` step | JCS → SHA-256 | Lexicographic by `step_id` | `episode_close` |
+| `outputs_hash` | Array of `{"step_id", "output_hash"}` per `EMIT_OUTPUT` step with `step_status: PASS` (excludes SKIPPED/FAIL) | JCS → SHA-256 | Lexicographic by `step_id` | `episode_close` |
 | `output_hash` (step) | Step output JSON (opcode-specific; see §3.3) | JCS → SHA-256 | Single object | `episode_step` |
 | `input_hashes` (step) | `output_hash` values from direct dependencies | None (pre-computed) | `depends_on` order | `episode_step` |
 
@@ -206,7 +210,7 @@ Every `rce.episode_step/v0` receipt MUST include `step_status` in its payload.
 - `EMIT_OUTPUT` steps with a schema violation MUST include `schema_validation_error: "<message>"`.
 - Missing replay artifacts at verification time are `INTEGRITY_FAIL` (§6.2), not step-level `FAIL`.
 
-**Step output hashes by opcode:**
+**Step output hashes by opcode and status:**
 
 | Opcode | `output_hash` input |
 |--------|-------------------|
@@ -214,6 +218,9 @@ Every `rce.episode_step/v0` receipt MUST include `step_status` in its payload.
 | `APPLY_TRANSFORM` | The transform's structured output |
 | `ASSERT_HASH` | `{"assertion_passed": true}` or `{"assertion_passed": false}` |
 | `EMIT_OUTPUT` | The emitted claim object |
+| *(any, when `step_status: SKIPPED`)* | `null` — field MUST be present with value `null`. No output was produced. |
+
+**SKIPPED step receipts:** `output_hash` MUST be `null`. `input_hashes` MUST be `[]`. `output_size_bytes` and `duration_ms` MUST be `0`. These steps are excluded from `outputs_hash` computation (§2.4) and from Phase 4 replay comparison (§6.2).
 
 ### 3.5 Step Failure Propagation
 
@@ -288,7 +295,7 @@ Emitted once per step execution.
 | `opcode` | string | One of: `LOAD_INPUT`, `ASSERT_HASH`, `APPLY_TRANSFORM`, `EMIT_OUTPUT` |
 | `step_status` | string | `PASS`, `FAIL`, or `SKIPPED` (§3.4) |
 | `input_hashes` | array[string] | Dependency output hashes in `depends_on` order (§2.4) |
-| `output_hash` | string | SHA-256 of JCS(step_output) (§2.4) |
+| `output_hash` | string\|null | SHA-256 of JCS(step_output) (§2.4). `null` when `step_status` is `SKIPPED`. |
 | `output_size_bytes` | integer | Size of step output |
 | `duration_ms` | integer | Step execution duration |
 | `comparator_tier` | string | Tier applied to this step |
@@ -330,7 +337,7 @@ Emitted by a replay verifier (not the original executor). This receipt makes RCE
 | `original_pack_root_sha256` | string | Evidence identity of original pack |
 | `verdict` | string | `MATCH`, `DIVERGE`, or `INTEGRITY_FAIL` (§6) |
 | `receipt_integrity` | string | `PASS` or `FAIL` |
-| `claim_check` | string | `PASS` or `FAIL` |
+| `claim_check` | string\|null | `PASS`, `FAIL`, or `null`. MUST be `null` when `verdict` is `INTEGRITY_FAIL` (comparison was not reached). |
 | `replay_basis` | string | `"recorded_trace"` in v0 |
 | `comparator_tier` | string | `"A"` in v0 |
 | `script_hash` | string | SHA-256 of JCS(replay_script) |
@@ -371,7 +378,7 @@ RCE verdicts map onto the existing Assay two-axis contract (`receipt_integrity` 
 |---------|:-------------------:|:-------------:|:---------:|:-------------:|
 | `MATCH` | PASS | PASS | 0 | **PASS** |
 | `DIVERGE` | PASS | FAIL | 1 | **HONEST FAIL** |
-| `INTEGRITY_FAIL` | FAIL | — | 2 | **TAMPERED** |
+| `INTEGRITY_FAIL` | FAIL | `null` | 2 | **TAMPERED** |
 
 ### 6.1 Verdict Precedence
 
@@ -383,10 +390,10 @@ A conforming verifier MUST execute these phases in order. No phase begins until 
 
 | Phase | Action | Failure Verdict |
 |:-----:|--------|-----------------|
-| **1** | **Script validation.** Parse Episode Contract. Validate: unique step_ids, resolved depends_on, no cycles, at least one terminal EMIT_OUTPUT. | `INTEGRITY_FAIL` |
+| **1** | **Script validation.** Parse Episode Contract. Validate: all `step_id` values unique (the verifier MUST enforce uniqueness; JSON Schema `uniqueItems` does not cover object-field uniqueness), all `depends_on` references resolve to declared step_ids, no cycles, at least one terminal EMIT_OUTPUT. | `INTEGRITY_FAIL` |
 | **2** | **Pack integrity.** Standard Assay verification: file hashes, receipt chain, signature checks, attestation block. | `INTEGRITY_FAIL` |
-| **3** | **Completeness.** Verify artifacts present: Episode Contract, all input artifacts, one recorded trace per step. Verify receipts: one `episode_open`, one `episode_step` per step, one `episode_close`. Recompute and verify: `episode_spec_hash` (§2.1), `env_fingerprint_hash` (§2.3), `inputs_hash`, `script_hash` (§2.4), `outputs_hash` (§2.4). | `INTEGRITY_FAIL` |
-| **4** | **Replay comparison.** For each step in DAG order: verify `input_hashes` against dependency `output_hash` values in `depends_on` order; recompute step output from replay artifact; compare against receipt `output_hash` under declared comparator tier. Collect all divergences. | `DIVERGE` or `MATCH` |
+| **3** | **Completeness.** Verify artifacts present: Episode Contract, all input artifacts, one recorded trace per non-SKIPPED step. Verify receipts: one `episode_open`, one `episode_step` per script step (including SKIPPED), one `episode_close`. Recompute from the Episode Contract: `episode_spec_hash` (§2.1), `env_fingerprint_hash` (§2.3), `inputs_hash`, `script_hash` (§2.4). Recompute `outputs_hash` (§2.4) from `episode_step` receipt `output_hash` values for EMIT_OUTPUT steps — using **receipt payload values**, not replay artifacts. Reject if any recomputed hash does not match. | `INTEGRITY_FAIL` |
+| **4** | **Replay comparison.** For each step in DAG order: skip steps with `step_status: SKIPPED` (no replay artifact exists). For non-SKIPPED steps: verify `input_hashes` against dependency `output_hash` values in `depends_on` order; recompute step output hash from the recorded trace artifact; compare against the step receipt's `output_hash` under the step's declared comparator tier (use `replay_policy.comparator_tiers_by_step[step_id]` if present, otherwise `replay_policy.comparator_tier`). Collect all divergences per §5.5 collection policy. | `DIVERGE` or `MATCH` |
 
 **Consequence:** Two conforming verifiers given the same pack, contract, and traces MUST produce the same verdict.
 
