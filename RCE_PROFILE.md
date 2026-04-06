@@ -33,7 +33,7 @@ All hash fields in this profile use the prefixed format `sha256:<64-char-lowerca
 
 **Do not create two Episode truths.** AgentMesh owns episode identity and provenance. Assay owns replay contracts, receipts, and proof compilation.
 
-### 0.2 Relationship to Founding Laws
+### 0.3 Relationship to Founding Laws
 
 | Law | Statement | RCE Relevance |
 |-----|-----------|---------------|
