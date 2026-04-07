@@ -2,20 +2,24 @@
 
 > Assay Protocol defines the verification contract for MCP gateways in the [Assay](https://github.com/Haserjian/assay) ecosystem.
 
-[![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)]()
+![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)
 [![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-blue)](LICENSE)
 
 Assay Protocol is the spec and reference implementation for MCP gateways that can prove what tool-using AI systems did. It defines deny-by-default controls, tamper-evident receipts, and incident-response hooks for gateway-layer enforcement.
 
+It also hosts companion normative profiles when replay-verifiable Assay artifacts need a stable protocol home.
+
 > *"Agents talk via MCP. Agents prove via Assay."*
 
-**What this is:** A specification and reference implementation for MCP gateway conformance - the gateway-side control profile for deny-by-default tool use, filtered discovery, validation boundaries, receipts, and incident response.
+**What this is:** A specification and reference implementation for MCP gateway conformance - the gateway-side control profile for deny-by-default tool use, filtered discovery, validation boundaries, receipts, and incident response - plus companion replay profiles that define portable evidence contracts.
 
 **What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
 
 **Use this repo when:** you are building or auditing an MCP gateway and need to know what controls, receipts, and conformance hooks are required.
 
 **Spec:** v1.0.0-rc1
+
+**Companion Profile:** RCE v0.1 draft ([RCE_PROFILE.md](RCE_PROFILE.md))
 
 ## Quick Start
 
@@ -42,12 +46,16 @@ It is not a general agent framework and it is not the buyer-facing Assay artifac
 ## Documents
 
 **Normative:**
+
 | File | Purpose |
 |------|---------|
 | [SPEC.md](SPEC.md) | Full RFC-style specification |
 | [MCP_MINIMUM_PROFILE.md](MCP_MINIMUM_PROFILE.md) | 9 MUSTs for MCP gateway conformance |
+| [RCE_PROFILE.md](RCE_PROFILE.md) | Replay-Constrained Episode profile for replay-verifiable work units |
+| [schemas/rce_episode_contract.schema.json](schemas/rce_episode_contract.schema.json) | Machine-readable Episode Contract schema for RCE |
 
 **Informative:**
+
 | File | Purpose |
 |------|---------|
 | [FOR_HUMANS.md](FOR_HUMANS.md) | Plain-English explainer |
@@ -61,7 +69,7 @@ It is not a general agent framework and it is not the buyer-facing Assay artifac
 
 ## Reference Implementation
 
-```
+```text
 reference/python_gateway/
 ├── src/assay_gateway/
 │   ├── gateway.py      # Main orchestration
@@ -115,6 +123,7 @@ python scripts/crypto_core.py verify r1.json r2.json r3.json --keys public_keys.
 - **Compliance teams** preparing for EU AI Act and SOC 2 AI audit requirements
 
 ## Related Repos
+
 
 | Repo | Purpose |
 |------|---------|

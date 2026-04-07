@@ -8,9 +8,14 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Initial Constitutional Safety Protocol (CSP) specification
-- Receipt schema (JSON Schema Draft 2020-12) at `schemas/receipt.schema.json`
+- Receipt schema (JSON Schema Draft-07) at `schemas/receipt.schema.json`
+- Replay-Constrained Episode profile at `RCE_PROFILE.md`
+- Replay-Constrained Episode Contract schema at `schemas/rce_episode_contract.schema.json`
 - Python reference implementation (`reference/python_gateway/`)
 - Conformance test suite (22 tests)
+
+### Changed
+- Declared the RCE replay/evidence artifact as the active 30-day canonical object in `strategy/RCE_CANONICAL_OBJECT_30D.md`
 
 ### Specification Highlights
 - **Deny-by-default policies**: All actions require explicit authorization
