@@ -94,7 +94,7 @@
       "properties": {
         "step_id": {
           "type": "string",
-          "description": "Unique step identifier within this script"
+          "description": "Unique step identifier within this script. Verifier MUST enforce uniqueness across steps (JSON Schema cannot express cross-item field uniqueness)."
         },
         "opcode": {
           "type": "string",
@@ -102,20 +102,40 @@
         },
         "params": {
           "type": "object",
-          "description": "Opcode-specific parameters"
+          "description": "Opcode-specific parameters. Required fields vary by opcode — see allOf constraint below."
         },
         "depends_on": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
             "type": "string"
           },
-          "description": "Step IDs this step depends on. Empty array for root steps."
+          "description": "Step IDs this step depends on. Empty array for root steps. No duplicate entries."
         },
         "output_schema": {
-          "description": "Optional JSON Schema for step output validation"
+          "type": "object",
+          "description": "Optional JSON Schema (draft-07) for step output validation. Must be a valid JSON Schema object if present."
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "opcode": { "const": "LOAD_INPUT" } } },
+          "then": { "properties": { "params": { "required": ["ref"] } } }
+        },
+        {
+          "if": { "properties": { "opcode": { "const": "ASSERT_HASH" } } },
+          "then": { "properties": { "params": { "required": ["target", "expected_hash"] } } }
+        },
+        {
+          "if": { "properties": { "opcode": { "const": "APPLY_TRANSFORM" } } },
+          "then": { "properties": { "params": { "required": ["transform"] } } }
+        },
+        {
+          "if": { "properties": { "opcode": { "const": "EMIT_OUTPUT" } } },
+          "then": { "properties": { "params": { "required": ["claim_type", "output_ref"] } } }
+        }
+      ]
     },
     "replay_policy": {
       "type": "object",
