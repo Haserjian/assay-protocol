@@ -17,7 +17,7 @@ It also hosts companion normative profiles when replay-verifiable Assay artifact
 
 **Use this repo when:** you are building or auditing an MCP gateway and need to know what controls, receipts, and conformance hooks are required.
 
-**Spec:** v1.0.0-rc1
+> **Spec status:** v1.0.0-rc1 — **Release Candidate, pre-release.** Dated 2025-12-10. The contract may change before 1.0.0. See [SPEC.md](./SPEC.md) for the normative version.
 
 **Companion Profile:** RCE v0.1 draft ([RCE_PROFILE.md](RCE_PROFILE.md))
 
