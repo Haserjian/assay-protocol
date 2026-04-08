@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Haserjian/assay-protocol/schemas/settlement_credential.schema.json",
+  "title": "Settlement Credential v0.1",
+  "description": "Short-lived execution warrant for the Executor Membrane Profile. Tier 0 and Tier 1 only. The schema is the wire contract; semantics, reason codes, and conformance live in EXECUTOR_MEMBRANE_PROFILE.md, MEMBRANE_REASON_CODES.md, and conformance/executor_membrane.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "credential_id",
+    "schema_version",
+    "canon_version",
+    "issuer",
+    "key_id",
+    "issued_at",
+    "valid_until",
+    "single_use_nonce",
+    "audience",
+    "executor_id",
+    "subject",
+    "purpose",
+    "resource_uri",
+    "http_method",
+    "action_digest",
+    "policy_card_id",
+    "policy_hash",
+    "proof_tier",
+    "risk_budget",
+    "obligations",
+    "external_anchors",
+    "signature"
+  ],
+  "properties": {
+    "credential_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the JCS-canonicalized credential with 'signature' and 'credential_id' removed."
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "canon_version": {
+      "type": "string",
+      "const": "jcs-rfc8785"
+    },
+    "issuer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_id", "signer_pubkey_sha256", "trust_tier"],
+      "properties": {
+        "authority_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signer_pubkey_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "trust_tier": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3"]
+        }
+      }
+    },
+    "key_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Verifier key selection hint. The fingerprint is authoritative; the verifier resolves keys by (key_id, signer_pubkey_sha256) and re-checks the hash."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "single_use_nonce": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Intended verifying domain. Prevents cross-audience replay."
+    },
+    "executor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject_id", "subject_type"],
+      "properties": {
+        "subject_id": { "type": "string", "minLength": 1 },
+        "subject_type": {
+          "type": "string",
+          "enum": ["agent", "service", "human", "organism"]
+        }
+      }
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Short audit tag. Non-authoritative."
+    },
+    "resource_uri": {
+      "type": "string",
+      "pattern": "^/",
+      "minLength": 1
+    },
+    "http_method": {
+      "type": "string",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    },
+    "action_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the JCS-canonicalized inbound request payload envelope."
+    },
+    "policy_card_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "receipt_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_receipt_id"],
+      "properties": {
+        "decision_receipt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_receipt_hash": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "evidence_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "proof_tier": {
+      "type": "string",
+      "enum": ["T0", "T1", "T2", "T3"]
+    },
+    "risk_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "magnitude", "scope"],
+      "properties": {
+        "units": {
+          "type": "string",
+          "minLength": 1,
+          "description": "e.g. 'usd', 'tokens', 'requests'"
+        },
+        "magnitude": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["per_action", "per_credential", "per_window"]
+        }
+      }
+    },
+    "obligations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["post_execution"],
+      "properties": {
+        "post_execution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["require_receipt", "deadline_seconds"],
+          "properties": {
+            "require_receipt": { "type": "boolean" },
+            "require_ledger_anchor": { "type": "boolean" },
+            "deadline_seconds": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "external_anchors": {
+      "type": "array",
+      "description": "Reserved for T2+. MUST be empty at T0/T1. A conformant verifier MUST refuse any non-empty value at these tiers, regardless of anchor origin or content. See EXECUTOR_MEMBRANE_PROFILE.md §3.5.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["anchor_type", "anchor_id"],
+        "properties": {
+          "anchor_type": {
+            "type": "string",
+            "enum": [
+              "time_anchor",
+              "transparency_log",
+              "runtime_attestation",
+              "dual_control"
+            ]
+          },
+          "anchor_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "anchor_hash": {
+            "type": ["string", "null"],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "observed_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "signature_scope", "value"],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": ["Ed25519"]
+        },
+        "signature_scope": {
+          "type": "string",
+          "const": "jcs_rfc8785_without_signature"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Base64 Ed25519 signature over JCS(credential without 'signature')."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "proof_tier": { "enum": ["T0", "T1"] }
+        },
+        "required": ["proof_tier"]
+      },
+      "then": {
+        "properties": {
+          "external_anchors": { "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "proof_tier": { "const": "T1" }
+        },
+        "required": ["proof_tier"]
+      },
+      "then": {
+        "required": ["receipt_ref", "evidence_manifest_sha256"]
+      }
+    }
+  ]
+}
