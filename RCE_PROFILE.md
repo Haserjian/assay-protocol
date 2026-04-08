@@ -1,5 +1,9 @@
 # Assay Protocol — Replay-Constrained Episode (RCE) Profile v0.1
 
+> Canonical source: `Haserjian/assay-protocol`.
+>
+> The normative home for this profile is `assay-protocol/RCE_PROFILE.md`. This copy remains in Assay as an implementation-local mirror for verifier and fixture work and MUST NOT diverge intentionally.
+
 **Status:** Draft companion to SPEC.md
 **Version:** 0.1.0
 **Date:** 2026-04-06
