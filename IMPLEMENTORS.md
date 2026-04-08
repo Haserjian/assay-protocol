@@ -1,5 +1,7 @@
 # Assay Protocol v1.0 – Implementors Guide
 
+> **Status: Release Candidate.** This guide targets Assay Protocol v1.0.0-rc1 (dated 2025-12-10). The specification is pre-release; the contract may change before 1.0.0. See [SPEC.md](./SPEC.md) for the normative version.
+
 Use this as a checklist. If you can check every box in your chosen tier, you can honestly claim **Assay–conformant**.
 
 You can enforce these checks inside your agent runtime or via a "tool safety wrapper"/sidecar; the profile only cares that every Tool Action goes through this logic.
