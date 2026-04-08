@@ -713,7 +713,7 @@ A reference implementation exists and is being validated against the conformance
 - Emergency override with receipt linkage
 - 5-receipt law-change episode validation
 
-**Implementation access:** The reference implementation currently lives in a private repository and will be made available for conformance testing upon request.
+**Implementation access:** The reference implementation lives at [`reference/python_gateway/`](reference/python_gateway/) in this repository.
 
 **Contact:** Open an issue on the spec repository or reach out via the contact methods listed in the repo README.
 
