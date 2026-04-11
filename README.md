@@ -21,6 +21,16 @@ It also hosts companion normative profiles when replay-verifiable Assay artifact
 
 **Companion Profile:** RCE v0.1 draft ([RCE_PROFILE.md](RCE_PROFILE.md))
 
+## Repo Map
+
+- `assay` = core evidence product/runtime
+- `assay-protocol` = normative protocol + conformance/spec layer
+- `assay-verify-action`, `assay-ledger`, `assay-scorecard`, `assay-agent-demo` = ecosystem satellites
+- `agentmesh` = adjacent provenance/coordination engine
+- Local folder `csp-tool-safety-profile` is legacy naming; the canonical remote identity is `assay-protocol`
+
+See [docs/REPO_MAP.md](docs/REPO_MAP.md) for the repo-local map.
+
 ## Quick Start
 
 Fastest path: run the reference conformance tests, then read `FOR_HUMANS.md` if you want the plain-English version before diving into the spec.
