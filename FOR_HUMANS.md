@@ -1,144 +1,67 @@
-# How to Stop AI Tools from Doing Catastrophic Things
+# Assay Protocol In Plain English
 
-*A plain-English guide to the Assay Protocol*
+This file is the short explanation of what Assay Protocol is for.
 
 > **Status: Release Candidate.** This guide describes Assay Protocol v1.0.0-rc1 (dated 2025-12-10). The specification is pre-release; the contract may change before 1.0.0. See [SPEC.md](./SPEC.md) for the normative version.
 
 ---
 
-## 1) What problem are we solving?
+If you only need one sentence, use this:
 
-AI agents now run shell commands, delete files, call APIs, and update databases—from natural language. Without governance, we've already seen examples like:
+> Assay Protocol defines the portable evidence shape that lets another party verify an AI decision packet offline.
 
-- "Clear the cache" becoming `rm -rf` over an entire drive.
-- Prompt injection tricking IDE/agent tools into RCE.
+## What problem does it solve?
 
-Assay puts those tools under **law**, not vibes.
+Most AI systems already have logs, traces, or dashboards.
+Those are useful, but they still require the reviewer to trust the operator's system.
 
----
+Assay focuses on a narrower problem:
 
-## 2) The core idea (one sentence)
+- package the evidence
+- sign the package
+- make tampering visible
+- let another party verify it without calling back to the operator
 
-> **Any dangerous tool action must have a plan, a Guardian verdict, and a receipt.**
+## What does that mean in practice?
 
-No plan → **no execution**.
-No verdict → **no execution**.
-No receipt → **constitutionally invalid**.
+An Assay proof pack usually gives a reviewer:
 
----
+- a signed manifest
+- a receipt bundle
+- a machine-readable verification result
+- a human-readable verification transcript
+- the public key needed for offline verification
 
-## 3) What Assay actually does
+If one byte changes after signing, verification fails.
 
-### Admits danger
-Every tool call is labeled `LOW`/`MEDIUM`/`HIGH`/`CRITICAL`. `rm -rf /` is CRITICAL, not "just another shell command."
+## What is it good for?
 
-### Demands authorization
-HIGH/CRITICAL need a **ToolPlan** + **Guardian verdict** (`ALLOW`/`ESCALATE` or `DENY`). Missing or invalid? Block + RefusalReceipt.
+Assay is strongest in workflows where another party needs technical evidence:
 
-### Records everything
-Receipts for actions, refusals, plans, verdicts, overrides, and law-changes—hash-linked, timestamped, optionally signed.
+- vendor diligence
+- audit review
+- regulator response supplements
+- incident preservation
+- validation and test evidence
 
-### Evolves safely
-Rule changes go through a **5-receipt law-change episode** (violation → proposal → sandbox → council → outcome). If the chain is invalid, the law didn't change.
+## What it does not do by itself
 
-### Allows human overrides (with proof)
-One-time, receipted overrides with justification and linkage to the original refusal. Repeated overrides trigger a rule review.
+Assay does **not** replace the rest of your compliance or technical documentation.
 
----
+It does **not** by itself prove:
 
-## 4) Two quick stories
+- model correctness
+- dataset provenance
+- fairness or bias performance
+- completeness of instrumentation
+- signer honesty
+- full legal compliance
 
-### "Clear the cache"
+It is best understood as **supporting technical evidence inside a wider packet**.
 
-**Without Assay:**
+## If you need more than this page
 
-```
-User:  "Clear the cache"
-Agent: rm -rf D:\*
-Drive: deleted
-Agent: "I apologize."
-Logs:  maybe; nothing you'd want to rely on in an audit
-```
-
-**With Assay (Standard):**
-
-```
-Agent proposes: rm -rf D:\*
-System: risk = CRITICAL → needs plan + verdict
-Plan present? NO → BLOCKED
-Receipt: RefusalReceipt (amendment_vii_no_plan, citing Amendment VII—the "tool safety" rule)
-Drive: intact
-Agent: "Create and sign a plan, then request Guardian approval."
-```
-
-### Repeated overrides
-
-Overrides emit `EmergencyOverrideReceipt`. If the same pattern is overridden often, an `InvariantStressReceipt` triggers a law-change review: *"Maybe the rule is wrong; fix it formally."*
-
----
-
-## 5) Do I need it all?
-
-No. Three levels by design:
-
-| Level | What you need | Plans/Guardian? |
-|-------|---------------|-----------------|
-| **Basic** | Classify; block CRITICAL; emit AgentActionReceipt + RefusalReceipt | No |
-| **Standard** | Basic + plan + Guardian for HIGH/CRITICAL + full receipts | Yes |
-| **Court-Grade** | Standard + signed receipts, tri-temporal timestamps, law-change pipeline | Yes |
-
----
-
-## 6) How it maps to other frameworks
-
-Assay gives you a concrete protocol that maps cleanly onto these frameworks:
-
-- **OWASP LLM Top 10:** LLM08 (Excessive Agency) → risk classification + blocking + receipts.
-- **NIST AI RMF:** GOVERN (constitutional laws, council, history); MANAGE (Tool Safety enforcement + law-change pipeline).
-- **SOC 2 / HIPAA:** Court-Grade gives you a replayable story: who approved, when rules changed, can we prove it?
-
----
-
-## 7) How to start
-
-**If you build agents/tools:**
-- Add a risk classifier
-- Block CRITICAL patterns
-- Emit action/refusal receipts
-- Then add plans + Guardian for HIGH/CRITICAL
-
-**If you're building an MCP gateway:**
-- See [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md) for 9 MUSTs
-- Run the [reference implementation](./reference/python_gateway/) to see it working
-- Use `make test` to verify 22 conformance tests pass
-
-**If you're security/compliance:**
-- Require Basic for any AI touching prod
-- Require Standard for exposed products
-- Reserve Court-Grade for regulated domains
-
-**If you buy tools:**
-- Ask for a RefusalReceipt for `rm -rf /`
-- Ask to see the law-change process
-
----
-
-## 8) Links
-
-- **Full spec:** [SPEC.md](./SPEC.md)
-- **MCP Gateway Profile:** [MCP_MINIMUM_PROFILE.md](./MCP_MINIMUM_PROFILE.md)
-- **Reference implementation:** [reference/python_gateway/](./reference/python_gateway/)
-- **Control mapping:** [CONTROL_MAP.md](./CONTROL_MAP.md)
-- **Incident walkthrough:** [incidents/ANTIGRAVITY.md](./incidents/ANTIGRAVITY.md)
-- **Implementor checklists:** [IMPLEMENTORS.md](./IMPLEMENTORS.md)
-- **Questions / conformance testing:** [open an issue](https://github.com/Haserjian/assay-protocol/issues)
-
----
-
-**Short version:**
-
-> Assay doesn't stop you using powerful tools—it stops your AI using them like a sleep-deprived junior with root access and no change log.
-
----
-
-*Created by Tim B. Haserjian. Part of the Assay Protocol (Assay-1.0) project.*
+- Start with [README.md](README.md)
+- For the Article 11 / Annex IV working map, read [ARTICLE11_ANNEXIV_MAPPING.md](ARTICLE11_ANNEXIV_MAPPING.md)
+- For the normative details, read [SPEC.md](SPEC.md)
+- For schemas and implementor details, see [schemas/](schemas/) and [reference/python_gateway](reference/python_gateway)

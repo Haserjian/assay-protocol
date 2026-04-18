@@ -1,147 +1,146 @@
 # Assay Protocol
 
-> Assay Protocol defines the verification contract for MCP gateways in the [Assay](https://github.com/Haserjian/assay) ecosystem.
+**Portable, independently verifiable evidence packs for AI decisions.**
 
-![Tests](https://img.shields.io/badge/tests-52%20passed-brightgreen)
-[![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-blue)](LICENSE)
+Assay turns AI activity into signed proof packs another party can verify offline.
+That matters when you need to answer boring, expensive questions:
 
-Assay Protocol is the spec and reference implementation for MCP gateways that can prove what tool-using AI systems did. It defines deny-by-default controls, tamper-evident receipts, and incident-response hooks for gateway-layer enforcement.
+- What happened?
+- What policy ran?
+- Was the evidence changed after the fact?
+- Can an assessor or buyer verify it without trusting our server?
 
-It also hosts companion normative profiles when replay-verifiable Assay artifacts need a stable protocol home.
+This repo is the public verification contract and documentation layer for Assay evidence packs.
 
-> *"Agents talk via MCP. Agents prove via Assay."*
+It is **not** an agent framework.
+It is **not** a runtime governance platform.
+It is **not** a claim that cryptography replaces compliance work.
 
-**What this is:** A specification and reference implementation for MCP gateway conformance - the gateway-side control profile for deny-by-default tool use, filtered discovery, validation boundaries, receipts, and incident response - plus companion replay profiles that define portable evidence contracts.
+It is the part that makes evidence portable.
 
-**What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
+## Start Here
 
-**Use this repo when:** you are building or auditing an MCP gateway and need to know what controls, receipts, and conformance hooks are required.
+- **Need the commercial shape first?** Read [Article 11 / Annex IV working map](ARTICLE11_ANNEXIV_MAPPING.md)
+- **Want to verify a specimen pack right now?** Try [assay-agent-demo](https://github.com/Haserjian/assay-agent-demo)
+- **Want a browser verifier?** Use the [proof gallery verifier](https://haserjian.github.io/assay-proof-gallery/verify.html)
+- **Need the formal spec?** Read [SPEC.md](SPEC.md)
 
 > **Spec status:** v1.0.0-rc1 — **Release Candidate, pre-release.** Dated 2025-12-10. The contract may change before 1.0.0. See [SPEC.md](./SPEC.md) for the normative version.
 
-**Companion Profile:** RCE v0.1 draft ([RCE_PROFILE.md](RCE_PROFILE.md))
+## What Assay Evidence Packs Give You
 
-## Quick Start
+- **Tamper evidence**: change one byte after signing and verification fails
+- **Offline verification**: no vendor server required
+- **Signer identity**: the pack carries the public key needed to verify the signature
+- **Execution context**: run identifiers, timestamps, receipt counts, and policy hashes travel with the pack
+- **Human-readable summary**: the same pack includes a verifier transcript a reviewer can read without parsing JSON
 
-Fastest path: run the reference conformance tests, then read `FOR_HUMANS.md` if you want the plain-English version before diving into the spec.
+## What This Repo Covers
 
-```bash
-cd reference/python_gateway
-python3 -m venv .venv && source .venv/bin/activate   # Windows: py -m venv .venv && .venv\Scripts\activate
-pip install pytest
-PYTHONPATH=src pytest tests/ -v
+This repo defines the verification-facing shape of an Assay proof pack:
 
-# 52 tests, ~0.05s
+- signed manifest
+- receipt bundle
+- verification report
+- verification transcript
+- schema and canonicalization expectations
+
+For regulated buyers, auditors, and assessors, the key point is simple:
+
+> Assay does not ask you to trust our dashboard.
+> It gives you an artifact you can verify yourself.
+
+## What It Does Not Claim
+
+Assay proof packs do **not** by themselves prove:
+
+- that the signer was honest
+- that every system action was instrumented
+- that the model output was correct, fair, or safe
+- that a proof pack alone satisfies all of Article 11 / Annex IV
+
+Those boundaries matter. Assay is strongest as **supporting technical evidence** inside a wider compliance, audit, or incident workflow.
+
+## Evidence Pack Anatomy
+
+Typical pack contents:
+
+```text
+proof_pack/
+  receipt_pack.jsonl
+  verify_report.json
+  verify_transcript.md
+  pack_manifest.json
+  pack_signature.sig
 ```
 
-## What You Get
+At minimum, these files let a third party answer:
 
-- **Proof when things go wrong:** Every tool action gets a receipt with timestamp, decision, and hash
-- **Deny-by-default protection:** Nothing executes without explicit policy approval
-- **Incident response:** Kill switch to disable compromised tools instantly
-- **Auditable trail:** Signed receipts with hash chains (Ed25519, JCS-canonical)
+- did the evidence change?
+- who signed it?
+- when was it created?
+- how many receipts are in scope?
+- did verification pass?
 
-It is not a general agent framework and it is not the buyer-facing Assay artifact path.
+## Where Assay Helps
+
+Assay is useful anywhere another party needs more than logs:
+
+- **regulated sales**: vendor packets attached to security, compliance, or trust reviews
+- **audits**: technical evidence that can be checked outside the operator's environment
+- **incidents**: a stable, signed packet that survives post-hoc scrutiny
+- **internal assurance**: proving policy execution and retaining honest failures
 
 ## Documents
 
-**Normative:**
+### Buyer- and Assessor-Facing
 
 | File | Purpose |
 |------|---------|
-| [SPEC.md](SPEC.md) | Full RFC-style specification |
-| [MCP_MINIMUM_PROFILE.md](MCP_MINIMUM_PROFILE.md) | 9 MUSTs for MCP gateway conformance |
-| [RCE_PROFILE.md](RCE_PROFILE.md) | Replay-Constrained Episode profile for replay-verifiable work units |
-| [schemas/rce_episode_contract.schema.json](schemas/rce_episode_contract.schema.json) | Machine-readable Episode Contract schema for RCE |
+| [ARTICLE11_ANNEXIV_MAPPING.md](ARTICLE11_ANNEXIV_MAPPING.md) | Working map from Assay proof-pack artifacts to EU AI Act Article 11 / Annex IV expectations |
 
-**Informative:**
+### Normative And Implementor Docs
 
 | File | Purpose |
 |------|---------|
-| [FOR_HUMANS.md](FOR_HUMANS.md) | Plain-English explainer |
-| [IMPLEMENTORS.md](IMPLEMENTORS.md) | Adoption checklists (Basic/Standard/Court-Grade) |
-| [CONTROL_MAP.md](CONTROL_MAP.md) | MUST → Hook → Module → Test mapping |
-| [MCP_GATEWAY_MAP.md](MCP_GATEWAY_MAP.md) | Enforcement hooks + code patterns |
-| [REASON_CODES.md](REASON_CODES.md) | Canonical reason codes |
-| [schemas/receipt.schema.json](schemas/receipt.schema.json) | JSON Schema for receipts |
-| [conformance/](conformance/) | How to claim conformance |
-| [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Receipt format spec (JCS, Ed25519, anchoring) |
+| [SPEC.md](SPEC.md) | Full protocol specification |
+| [FOR_HUMANS.md](FOR_HUMANS.md) | Plain-English explainer for the broader protocol surface |
+| [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Receipt-format notes for signed evidence artifacts |
+| [schemas/](schemas/) | Machine-readable schemas |
+| [reference/python_gateway](reference/python_gateway) | Reference implementation |
+| [MCP_MINIMUM_PROFILE.md](MCP_MINIMUM_PROFILE.md) | MCP gateway control profile |
+| [EXECUTOR_MEMBRANE_PROFILE.md](EXECUTOR_MEMBRANE_PROFILE.md) | Executor membrane profile |
+| [RCE_PROFILE.md](RCE_PROFILE.md) | Replay-constrained episode profile |
+| [CONTROL_MAP.md](CONTROL_MAP.md) | MUST-to-hook mapping |
+| [MCP_GATEWAY_MAP.md](MCP_GATEWAY_MAP.md) | Gateway enforcement hooks and code patterns |
 
-## Reference Implementation
+## Quick Technical Start
 
-```text
-reference/python_gateway/
-├── src/assay_gateway/
-│   ├── gateway.py      # Main orchestration
-│   ├── types.py        # Core types + enums
-│   ├── registry.py     # MUST 1: Tool inventory
-│   ├── authn.py        # MUST 2: Authentication
-│   ├── authz.py        # MUST 3+4: Discovery + AuthZ
-│   ├── credentials.py  # MUST 5: No token passthrough
-│   ├── preflight.py    # MUST 7: Validation
-│   ├── sandbox.py      # MUST 8: Boundaries
-│   ├── receipts.py     # MUST 9: Receipts
-│   └── incident.py     # MUST 9: Kill switch
-└── tests/
-    ├── test_conformance.py  # 22 conformance tests (9 MUSTs)
-    └── test_pccap.py        # 30 PCCap capability tests
-```
-
-## Tooling
-
-### assay-validate: Conformance Checker
+If you want to exercise the reference implementation:
 
 ```bash
-# Validate receipts and generate report + badge
-python scripts/assay_validate.py path/to/receipts/ -o report.json --badge badge.svg
-
-# Output:
-# - PASS/FAIL for 7 conformance checks
-# - JSON report (optionally signed)
-# - SVG badge for embedding
+cd reference/python_gateway
+python3 -m venv .venv && source .venv/bin/activate
+pip install pytest
+PYTHONPATH=src pytest tests/ -v
 ```
 
-### crypto_core: Receipt Signing
+If you want to verify a real pack:
 
 ```bash
-# Generate Ed25519 keypair
-python scripts/crypto_core.py keygen --key-id my-operator -o keys/
-
-# Sign a receipt
-python scripts/crypto_core.py sign receipt.json --key keys/my-operator.private.json
-
-# Verify chain
-python scripts/crypto_core.py verify r1.json r2.json r3.json --keys public_keys.json
+pipx install assay-ai
+assay verify-pack proof_pack/
 ```
-
-> **Note:** Install `cryptography` for real Ed25519 signatures: `pip install cryptography`
-
-## Who This Is For
-
-- **Security engineers** who need to prove agent behavior to their CISO
-- **Platform teams** building tool-using AI that needs guardrails
-- **Compliance teams** preparing for EU AI Act and SOC 2 AI audit requirements
 
 ## Related Repos
 
-
 | Repo | Purpose |
 |------|---------|
-| [assay](https://github.com/Haserjian/assay) | Core CLI + SDK — evidence compiler for AI systems |
-| [assay-verify-action](https://github.com/Haserjian/assay-verify-action) | GitHub Action for CI evidence verification |
-| [assay-ledger](https://github.com/Haserjian/assay-ledger) | Public transparency ledger |
-| [agentmesh](https://github.com/Haserjian/agentmesh) | Multi-agent coordination and provenance |
-
-## Links
-
-- [assay-ai on PyPI](https://pypi.org/project/assay-ai/)
-- [Assay source](https://github.com/Haserjian/assay)
-- [Assay Verify Action](https://github.com/Haserjian/assay-verify-action)
-
----
-
-*Part of the [Assay](https://github.com/Haserjian/assay) ecosystem. Created by Tim B. Haserjian.*
+| [assay](https://github.com/Haserjian/assay) | Core CLI and SDK for generating and verifying proof packs |
+| [assay-verify-ts](https://github.com/Haserjian/assay-verify-ts) | Independent TypeScript verifier |
+| [assay-proof-gallery](https://github.com/Haserjian/assay-proof-gallery) | Public specimen packs and browser verifier |
+| [assay-ledger](https://github.com/Haserjian/assay-ledger) | Optional transparency anchor, not required for offline verification |
 
 ## License
 
-CC BY 4.0 (specification text), MIT (reference implementation code).
+CC BY 4.0 for specification text. MIT for reference implementation code.
