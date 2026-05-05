@@ -1,0 +1,59 @@
+{
+  "profiles": {
+    "glimps": {
+      "status": "incubating",
+      "normative_crs_profile": false,
+      "description": "GLIMPS births candidate sight but grants no authority.",
+      "receipt_types": {
+        "glimps.birth/v0": {
+          "receipt_type": "glimps.birth/v0",
+          "profile": "glimps",
+          "profile_status": "incubating",
+          "normative_crs_profile": false,
+          "schema_path": "profiles/glimps/schema/glimpse_birth_receipt.v0.json",
+          "validator": "scripts/glimps_validate.py",
+          "example_path": "profiles/glimps/examples/agent_failure_birth_receipt.json",
+          "description": "Records a Glimpse Packet: candidate sight with pressure, lens, rivals, first wound, permissions, and negative duties.",
+          "authority_boundary": {
+            "can_govern_execution": false,
+            "can_modify_policy": false,
+            "can_allocate_execution_budget": false,
+            "can_raise_confidence_without_receipts": false
+          }
+        },
+        "glimps.emission_census/v0": {
+          "receipt_type": "glimps.emission_census/v0",
+          "profile": "glimps",
+          "profile_status": "incubating",
+          "normative_crs_profile": false,
+          "schema_path": "profiles/glimps/schema/glimpse_emission_census.v0.json",
+          "validator": "scripts/glimps_validate.py",
+          "example_path": "profiles/glimps/examples/emission_census.json",
+          "description": "Audits GLIMPS birth-side coverage, including frame monoculture, rival suppression, and unwounded candidate warnings.",
+          "authority_boundary": {
+            "can_govern_execution": false,
+            "can_modify_policy": false,
+            "can_allocate_execution_budget": false,
+            "can_raise_confidence_without_receipts": false
+          }
+        },
+        "glimps.wound/v0": {
+          "receipt_type": "glimps.wound/v0",
+          "profile": "glimps",
+          "profile_status": "incubating",
+          "normative_crs_profile": false,
+          "schema_path": "profiles/glimps/schema/glimpse_wound_receipt.v0.json",
+          "validator": "scripts/glimps_validate.py",
+          "example_path": "profiles/glimps/examples/wound_receipt.json",
+          "description": "Records an Arena probe result for a GLIMPS candidate without granting authority.",
+          "authority_boundary": {
+            "can_govern_execution": false,
+            "can_modify_policy": false,
+            "can_allocate_execution_budget": false,
+            "can_raise_confidence_without_receipts": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -41,12 +41,10 @@ except ImportError:
 
 
 try:
-    from glimps_validate import SCHEMA_BY_RECEIPT_TYPE as GLIMPS_RECEIPT_TYPES
     from glimps_validate import validate_glimps_receipt
 except ImportError:
     # Keep the gateway conformance validator usable even when profile validators
     # are not installed on a copied script path.
-    GLIMPS_RECEIPT_TYPES = {}
     validate_glimps_receipt = None
 
 
@@ -478,6 +476,27 @@ def is_glimps_receipt_type(receipt_type: object) -> bool:
     return isinstance(receipt_type, str) and receipt_type.startswith("glimps.")
 
 
+def load_profile_registry(repo_root: Optional[Path] = None) -> dict:
+    """Load Assay profile registry metadata."""
+    base = repo_root or Path(__file__).resolve().parents[1]
+    registry_path = base / "profiles" / "registry.json"
+    if not registry_path.exists():
+        return {"profiles": {}}
+    with open(registry_path) as f:
+        return json.load(f)
+
+
+def registered_glimps_receipt_types(repo_root: Optional[Path] = None) -> set[str]:
+    """Return GLIMPS receipt types registered with Assay."""
+    registry = load_profile_registry(repo_root)
+    return set(
+        registry.get("profiles", {})
+        .get("glimps", {})
+        .get("receipt_types", {})
+        .keys()
+    )
+
+
 def dispatch_profile_validation(receipts: list[dict]) -> Optional[dict]:
     """Dispatch profile-owned receipts to their profile validator.
 
@@ -532,15 +551,16 @@ def dispatch_profile_validation(receipts: list[dict]) -> Optional[dict]:
             "results": [],
         }
 
+    registered_receipt_types = registered_glimps_receipt_types()
     results = []
     for receipt in receipts:
         receipt_type = receipt.get("receipt_type", "<missing>")
-        if receipt_type not in GLIMPS_RECEIPT_TYPES:
+        if receipt_type not in registered_receipt_types:
             results.append({
                 "ok": False,
                 "receipt_type": receipt_type,
                 "profile": "glimps",
-                "errors": [f"unknown GLIMPS receipt_type: {receipt_type!r}"],
+                "errors": [f"unregistered GLIMPS receipt_type: {receipt_type!r}"],
             })
             continue
 

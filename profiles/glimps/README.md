@@ -6,6 +6,8 @@ A glimpse is not a claim. A claim is not an invariant. GLIMPS admits candidate s
 
 Status: incubating Assay profile. This is not yet a normative Constitutional Receipt Standard profile.
 
+GLIMPS is registered in `profiles/registry.json` as an Assay-visible incubating profile family.
+
 ## Doctrine
 
 - GLIMPS births candidate sight.

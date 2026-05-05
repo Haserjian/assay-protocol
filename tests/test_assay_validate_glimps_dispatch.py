@@ -77,7 +77,7 @@ def test_general_dispatcher_rejects_unknown_glimps_receipt_type():
     report = dispatch_profile_validation([receipt])
     assert report["ok"] is False
     assert report["receipt_type"] == "glimps.unknown/v0"
-    assert any("unknown GLIMPS receipt_type" in error for error in report["errors"])
+    assert any("unregistered GLIMPS receipt_type" in error for error in report["errors"])
 
 
 def test_general_dispatcher_rejects_non_string_receipt_type():
