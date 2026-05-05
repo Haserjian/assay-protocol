@@ -4,6 +4,8 @@ GLIMPS is a schema-first protocol profile for pre-claim hypothesis birth.
 
 A glimpse is not a claim. A claim is not an invariant. GLIMPS admits candidate sight into the organism without granting authority.
 
+Status: incubating Assay profile. This is not yet a normative Constitutional Receipt Standard profile.
+
 ## Doctrine
 
 - GLIMPS births candidate sight.
@@ -66,6 +68,28 @@ Promotion to a Claim Packet does not require a candidate to survive its first wo
 
 Surviving wounds belongs to Arena and Guardian, not GLIMPS.
 
+## Validation
+
+Validate one GLIMPS receipt:
+
+```bash
+python3 scripts/glimps_validate.py profiles/glimps/examples/agent_failure_birth_receipt.json
+```
+
+Validate all example receipts in a directory:
+
+```bash
+python3 scripts/glimps_validate.py profiles/glimps/examples
+```
+
+Emit machine-readable output:
+
+```bash
+python3 scripts/glimps_validate.py profiles/glimps/examples/wound_receipt.json --json
+```
+
+The validator dispatches by `receipt_type`, loads the matching schema, and enforces GLIMPS authority boundaries. It rejects unknown receipt types, authority leakage, missing rivals, missing first wounds, invalid wound routes, and census counts whose warnings do not match the counts.
+
 ## Non-Goals
 
 - No LLM calls.
@@ -80,4 +104,4 @@ Surviving wounds belongs to Arena and Guardian, not GLIMPS.
 - Map these profile receipts into the Constitutional Receipt Standard once the CRS profile registry is ready.
 - Define the Claim Packet adapter boundary after `glimps.wound/v0` examples stabilize.
 - Add optional Evidence Wire Protocol correlation fields without making this v0 depend on AgentMesh.
-- Add Assay validator support for profile-level invariant checks.
+- Decide whether `scripts/glimps_validate.py` stays profile-specific or becomes part of the general Assay validator dispatch path.
