@@ -1,0 +1,15 @@
+{
+  "receipt_type": "glimps.wound/v0",
+  "glimpse_id": "G_agent_failure_001",
+  "candidate_id": "H_agent_failure_001",
+  "wound_id": "W_agent_failure_replay_001",
+  "probe_type": "representation_check",
+  "expected_result": "If regime fragmentation is useful, isolated replay should produce distinct receipt signatures for at least two alleged regimes.",
+  "observed_result": "Provider drift and memory contamination cases separated under memory isolation; evaluator disagreement remained inconclusive.",
+  "wound_result": "survived",
+  "new_questions": [
+    "Does evaluator disagreement require a separate verifier fixture?",
+    "Do provider swaps preserve the same separation?"
+  ],
+  "next_route": "run_more_wounds"
+}

@@ -1,0 +1,80 @@
+{
+  "receipt_type": "glimps.birth/v0",
+  "glimpse_id": "G_math_001",
+  "object_level": "candidate_hypothesis",
+  "niche": "math",
+  "truth_track": "obstruction",
+  "source_pressure": ["proof_dead_end", "beautiful_near_miss", "missing_invariant"],
+  "pressure_statement": "Several small cases obey the pattern, but every direct induction attempt accumulates exception handling rather than reducing it.",
+  "lens": {
+    "name": "obstruction_as_object",
+    "makes_visible": ["proof gaps as structured data", "boundary cases", "candidate invariants"],
+    "hides": ["simple computational mistakes", "accidental low-range coincidences"],
+    "distortion_risk": "May over-interpret a failed proof strategy as evidence of a real obstruction."
+  },
+  "lens_debt": {
+    "likely_false_positives": ["noise in small cases treated as structure"],
+    "likely_false_negatives": ["a direct proof that bypasses the obstruction vocabulary"],
+    "overuse_failure_mode": "Every failed proof begins to look like a deep missing invariant.",
+    "counter_lens": "brute_force_small_cases"
+  },
+  "candidate_claim_or_frame": "The pattern may be governed by an obstruction invariant rather than by the visible recurrence.",
+  "imagination_type": ["obstruction", "geometric"],
+  "proposer": {
+    "kind": "hybrid",
+    "id": "glimps-v0-example"
+  },
+  "mechanism": "If real, the obstruction should stay stable under transformations that preserve the hidden invariant and fail under transformations that break it.",
+  "rivals": [
+    {
+      "rival_id": "R1",
+      "frame": "The pattern is an artifact of the chosen representation."
+    },
+    {
+      "rival_id": "R2",
+      "frame": "The result is locally true in the checked range but globally false."
+    }
+  ],
+  "first_wound": {
+    "smallest_test": "Compute the next boundary family where the recurrence changes regime.",
+    "what_would_hurt": "A boundary case that satisfies the recurrence but violates the proposed obstruction.",
+    "what_it_forbids": "The same obstruction score appearing in both successful and failed cases."
+  },
+  "confidence": "low",
+  "fertility": "high",
+  "initial_authority": "speculative",
+  "attention_request": {
+    "requested": true,
+    "reason": "High search yield if the obstruction vocabulary separates boundary cases.",
+    "budget_class": "tiny_probe",
+    "requires_gate": true
+  },
+  "permissions": {
+    "can_inspire_search": true,
+    "can_generate_tests": true,
+    "can_prioritize_search": true,
+    "can_allocate_execution_budget": false,
+    "can_change_default_route": false,
+    "can_govern_execution": false,
+    "can_modify_policy": false,
+    "can_raise_confidence_without_receipts": false,
+    "requires_receipts_for_promotion": true
+  },
+  "negative_duties": {
+    "must_not_raise_confidence": true,
+    "must_not_suppress_rivals": true,
+    "must_not_mutate_memory": true,
+    "must_not_modify_policy": true,
+    "must_not_claim_exhaustive_search": true,
+    "must_not_present_beauty_as_evidence": true
+  },
+  "related_ghosts": [],
+  "promotion_requirements": [
+    "Pressure is named.",
+    "Lens blindness is recorded.",
+    "At least one rival is present.",
+    "First wound is specified.",
+    "Cheap probe is available.",
+    "Permissions are locked down."
+  ]
+}

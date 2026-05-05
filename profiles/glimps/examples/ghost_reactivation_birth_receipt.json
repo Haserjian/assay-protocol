@@ -1,0 +1,85 @@
+{
+  "receipt_type": "glimps.birth/v0",
+  "glimpse_id": "G_ghost_reactivation_001",
+  "object_level": "candidate_hypothesis",
+  "niche": "memory",
+  "truth_track": "usefulness",
+  "source_pressure": ["ghost_reactivation", "recurring_metaphor", "repeated_failure"],
+  "pressure_statement": "A previously archived frame keeps matching new failures, but it never received a clean wound under the current receipt regime.",
+  "lens": {
+    "name": "ghost_seed_under_new_pressure",
+    "makes_visible": ["old failure signal", "new receipt requirements", "unreceived wounds"],
+    "hides": ["nostalgia for a dead frame", "semantic drift in reused vocabulary"],
+    "distortion_risk": "May let a familiar ghost feel wiser than the new evidence warrants."
+  },
+  "lens_debt": {
+    "likely_false_positives": ["shared language mistaken for shared mechanism"],
+    "likely_false_negatives": ["a useful ghost rejected because it failed under an older representation"],
+    "overuse_failure_mode": "Archived ideas sneak back into governance by familiarity.",
+    "counter_lens": "fresh_pressure_no_archive"
+  },
+  "candidate_claim_or_frame": "The archived frame may still be useful as a search lens if it is reintroduced only through new receipts and new wounds.",
+  "imagination_type": ["ghost_revival", "counterfactual"],
+  "proposer": {
+    "kind": "human",
+    "id": "glimps-v0-example"
+  },
+  "mechanism": "If useful, the ghost should predict a new probe outcome that was not available when it was archived.",
+  "rivals": [
+    {
+      "rival_id": "R1",
+      "frame": "The ghost is only a recurring metaphor with no new mechanism."
+    },
+    {
+      "rival_id": "R2",
+      "frame": "The new pressure is better explained by a fresh lens."
+    }
+  ],
+  "first_wound": {
+    "smallest_test": "Run one new receipt-backed probe the archived frame did not previously face.",
+    "what_would_hurt": "The ghost fails to predict anything different from the fresh counter-lens.",
+    "what_it_forbids": "Reactivation without new receipts."
+  },
+  "confidence": "low",
+  "fertility": "medium",
+  "initial_authority": "speculative",
+  "attention_request": {
+    "requested": true,
+    "reason": "The ghost may seed one cheap probe, but it cannot govern without new receipts.",
+    "budget_class": "tiny_probe",
+    "requires_gate": true
+  },
+  "permissions": {
+    "can_inspire_search": true,
+    "can_generate_tests": true,
+    "can_prioritize_search": true,
+    "can_allocate_execution_budget": false,
+    "can_change_default_route": false,
+    "can_govern_execution": false,
+    "can_modify_policy": false,
+    "can_raise_confidence_without_receipts": false,
+    "requires_receipts_for_promotion": true
+  },
+  "negative_duties": {
+    "must_not_raise_confidence": true,
+    "must_not_suppress_rivals": true,
+    "must_not_mutate_memory": true,
+    "must_not_modify_policy": true,
+    "must_not_claim_exhaustive_search": true,
+    "must_not_present_beauty_as_evidence": true
+  },
+  "related_ghosts": [
+    {
+      "ghost_id": "GH_old_frame_001",
+      "new_receipts": ["receipt:new-pressure-001"]
+    }
+  ],
+  "promotion_requirements": [
+    "Pressure is named.",
+    "Lens blindness is recorded.",
+    "At least one rival is present.",
+    "First wound is specified.",
+    "Cheap probe is available.",
+    "New receipts exist for ghost reactivation."
+  ]
+}

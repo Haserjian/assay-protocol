@@ -1,0 +1,377 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Haserjian/assay/profiles/glimps/schema/glimpse_birth_receipt.v0.json",
+  "title": "GLIMPS Birth Receipt v0",
+  "description": "A Glimpse Packet records pre-claim candidate sight without granting authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_type",
+    "glimpse_id",
+    "object_level",
+    "niche",
+    "truth_track",
+    "source_pressure",
+    "pressure_statement",
+    "lens",
+    "lens_debt",
+    "candidate_claim_or_frame",
+    "imagination_type",
+    "proposer",
+    "mechanism",
+    "rivals",
+    "first_wound",
+    "confidence",
+    "fertility",
+    "initial_authority",
+    "attention_request",
+    "permissions",
+    "negative_duties",
+    "related_ghosts",
+    "promotion_requirements"
+  ],
+  "properties": {
+    "receipt_type": {
+      "type": "string",
+      "enum": ["glimps.birth/v0"]
+    },
+    "glimpse_id": {
+      "type": "string",
+      "pattern": "^G_[A-Za-z0-9._-]+$"
+    },
+    "object_level": {
+      "type": "string",
+      "enum": ["spark", "pressure_note", "lens", "candidate_hypothesis", "proof_program"]
+    },
+    "niche": {
+      "type": "string",
+      "enum": [
+        "math",
+        "agent_failure",
+        "policy",
+        "memory",
+        "receipt_integrity",
+        "provider_routing",
+        "proof_search",
+        "market_constraint",
+        "human_workflow",
+        "systems"
+      ]
+    },
+    "truth_track": {
+      "type": "string",
+      "enum": ["truth", "usefulness", "representation", "obstruction", "taxonomy"]
+    },
+    "source_pressure": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "pressure_statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "makes_visible", "hides", "distortion_risk"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "makes_visible": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hides": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "distortion_risk": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "lens_debt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "likely_false_positives",
+        "likely_false_negatives",
+        "overuse_failure_mode",
+        "counter_lens"
+      ],
+      "properties": {
+        "likely_false_positives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "likely_false_negatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "overuse_failure_mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "counter_lens": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "candidate_claim_or_frame": {
+      "type": "string",
+      "minLength": 1
+    },
+    "imagination_type": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "analogical",
+          "geometric",
+          "adversarial",
+          "factorizing",
+          "taxonomic",
+          "obstruction",
+          "generative",
+          "mechanistic",
+          "symmetry",
+          "ghost_revival",
+          "counterfactual",
+          "system_mapping"
+        ]
+      }
+    },
+    "proposer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["human", "ai", "hybrid", "search_agent", "proof_agent"]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mechanism": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rivals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rival_id", "frame"],
+        "properties": {
+          "rival_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frame": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "first_wound": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["smallest_test", "what_would_hurt", "what_it_forbids"],
+      "properties": {
+        "smallest_test": {
+          "type": "string",
+          "minLength": 1
+        },
+        "what_would_hurt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "what_it_forbids": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "fertility": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "initial_authority": {
+      "type": "string",
+      "enum": ["speculative"]
+    },
+    "attention_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requested", "reason", "budget_class", "requires_gate"],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget_class": {
+          "type": "string",
+          "enum": ["tiny_probe", "sandbox", "arena_run"]
+        },
+        "requires_gate": {
+          "type": "boolean",
+          "enum": [true]
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "can_inspire_search",
+        "can_generate_tests",
+        "can_prioritize_search",
+        "can_allocate_execution_budget",
+        "can_change_default_route",
+        "can_govern_execution",
+        "can_modify_policy",
+        "can_raise_confidence_without_receipts",
+        "requires_receipts_for_promotion"
+      ],
+      "properties": {
+        "can_inspire_search": {
+          "type": "boolean"
+        },
+        "can_generate_tests": {
+          "type": "boolean"
+        },
+        "can_prioritize_search": {
+          "type": "boolean"
+        },
+        "can_allocate_execution_budget": {
+          "type": "boolean",
+          "enum": [false]
+        },
+        "can_change_default_route": {
+          "type": "boolean",
+          "enum": [false]
+        },
+        "can_govern_execution": {
+          "type": "boolean",
+          "enum": [false]
+        },
+        "can_modify_policy": {
+          "type": "boolean",
+          "enum": [false]
+        },
+        "can_raise_confidence_without_receipts": {
+          "type": "boolean",
+          "enum": [false]
+        },
+        "requires_receipts_for_promotion": {
+          "type": "boolean",
+          "enum": [true]
+        }
+      }
+    },
+    "negative_duties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "must_not_raise_confidence",
+        "must_not_suppress_rivals",
+        "must_not_mutate_memory",
+        "must_not_modify_policy",
+        "must_not_claim_exhaustive_search",
+        "must_not_present_beauty_as_evidence"
+      ],
+      "properties": {
+        "must_not_raise_confidence": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "must_not_suppress_rivals": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "must_not_mutate_memory": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "must_not_modify_policy": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "must_not_claim_exhaustive_search": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "must_not_present_beauty_as_evidence": {
+          "type": "boolean",
+          "enum": [true]
+        }
+      }
+    },
+    "related_ghosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ghost_id", "new_receipts"],
+        "properties": {
+          "ghost_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "new_receipts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "promotion_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

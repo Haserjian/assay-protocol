@@ -1,0 +1,17 @@
+{
+  "receipt_type": "glimps.emission_census/v0",
+  "pressure_id": "P_agent_failure_001",
+  "pressures_detected": 3,
+  "glimpses_generated": 5,
+  "lenses_generated": 4,
+  "candidates_generated": 3,
+  "candidates_with_rivals": 3,
+  "candidates_with_first_wounds": 3,
+  "pressures_without_candidates": [],
+  "dominant_lens_family": "regime_fragmentation",
+  "frame_monoculture_warning": false,
+  "attention_capture_warning": false,
+  "rival_suppression_warning": false,
+  "unwounded_candidate_warning": false,
+  "fertility_confidence_confusion_warning": false
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Haserjian/assay/profiles/glimps/schema/glimpse_wound_receipt.v0.json",
+  "title": "GLIMPS Wound Receipt v0",
+  "description": "A first probe or Arena wound applied to a GLIMPS candidate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_type",
+    "glimpse_id",
+    "candidate_id",
+    "wound_id",
+    "probe_type",
+    "expected_result",
+    "observed_result",
+    "wound_result",
+    "new_questions",
+    "next_route"
+  ],
+  "properties": {
+    "receipt_type": {
+      "type": "string",
+      "enum": ["glimps.wound/v0"]
+    },
+    "glimpse_id": {
+      "type": "string",
+      "pattern": "^G_[A-Za-z0-9._-]+$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^H_[A-Za-z0-9._-]+$"
+    },
+    "wound_id": {
+      "type": "string",
+      "pattern": "^W_[A-Za-z0-9._-]+$"
+    },
+    "probe_type": {
+      "type": "string",
+      "enum": [
+        "small_case",
+        "counterexample",
+        "rival_test",
+        "boundary_case",
+        "representation_check"
+      ]
+    },
+    "expected_result": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_result": {
+      "type": "string",
+      "minLength": 1
+    },
+    "wound_result": {
+      "type": "string",
+      "enum": ["survived", "weakened", "killed", "inconclusive"]
+    },
+    "new_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "next_route": {
+      "type": "string",
+      "enum": [
+        "promote_to_claim_packet",
+        "revise",
+        "archive_as_ghost",
+        "run_more_wounds"
+      ]
+    }
+  }
+}

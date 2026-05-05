@@ -1,0 +1,80 @@
+{
+  "receipt_type": "glimps.birth/v0",
+  "glimpse_id": "G_agent_failure_001",
+  "object_level": "candidate_hypothesis",
+  "niche": "agent_failure",
+  "truth_track": "taxonomy",
+  "source_pressure": ["repeated_failure", "authority_leakage", "overfit_zoo"],
+  "pressure_statement": "Agent failures labeled as provider drift, memory contamination, and evaluator disagreement are being collapsed into one noisy failure class.",
+  "lens": {
+    "name": "regime_fragmentation",
+    "makes_visible": ["clustered failure modes", "overloaded explanations", "receipt signature differences"],
+    "hides": ["single root-cause bugs", "one-off infrastructure instability"],
+    "distortion_risk": "May split one failure mode into too many regimes."
+  },
+  "lens_debt": {
+    "likely_false_positives": ["ordinary variance interpreted as a distinct regime"],
+    "likely_false_negatives": ["shared causal root hidden behind different symptoms"],
+    "overuse_failure_mode": "Taxonomy expands faster than testable constraints.",
+    "counter_lens": "single_fault_tree"
+  },
+  "candidate_claim_or_frame": "These failures may be multiple regimes rather than one noisy process.",
+  "imagination_type": ["factorizing", "taxonomic", "adversarial"],
+  "proposer": {
+    "kind": "hybrid",
+    "id": "glimps-v0-example"
+  },
+  "mechanism": "If real, each regime should leave a different receipt signature and respond differently to replay, provider swap, and memory isolation.",
+  "rivals": [
+    {
+      "rival_id": "R1",
+      "frame": "The pattern is a representation artifact from coarse labels."
+    },
+    {
+      "rival_id": "R2",
+      "frame": "A single verifier bug creates the apparent taxonomy."
+    }
+  ],
+  "first_wound": {
+    "smallest_test": "Replay three failing episodes with memory isolation and compare receipt signatures.",
+    "what_would_hurt": "All alleged regimes show the same receipt signature under replay.",
+    "what_it_forbids": "Provider drift, memory contamination, and evaluator disagreement collapsing to identical traces after isolation."
+  },
+  "confidence": "low",
+  "fertility": "high",
+  "initial_authority": "speculative",
+  "attention_request": {
+    "requested": true,
+    "reason": "A tiny replay probe could reduce the failure zoo into separable regimes.",
+    "budget_class": "tiny_probe",
+    "requires_gate": true
+  },
+  "permissions": {
+    "can_inspire_search": true,
+    "can_generate_tests": true,
+    "can_prioritize_search": true,
+    "can_allocate_execution_budget": false,
+    "can_change_default_route": false,
+    "can_govern_execution": false,
+    "can_modify_policy": false,
+    "can_raise_confidence_without_receipts": false,
+    "requires_receipts_for_promotion": true
+  },
+  "negative_duties": {
+    "must_not_raise_confidence": true,
+    "must_not_suppress_rivals": true,
+    "must_not_mutate_memory": true,
+    "must_not_modify_policy": true,
+    "must_not_claim_exhaustive_search": true,
+    "must_not_present_beauty_as_evidence": true
+  },
+  "related_ghosts": [],
+  "promotion_requirements": [
+    "Pressure is named.",
+    "Lens blindness is recorded.",
+    "At least one rival is present.",
+    "First wound is specified.",
+    "Cheap probe is available.",
+    "Permissions are locked down."
+  ]
+}

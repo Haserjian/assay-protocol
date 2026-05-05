@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Haserjian/assay/profiles/glimps/schema/glimpse_emission_census.v0.json",
+  "title": "GLIMPS Emission Census v0",
+  "description": "Birth-side coverage audit for a GLIMPS run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_type",
+    "pressure_id",
+    "pressures_detected",
+    "glimpses_generated",
+    "lenses_generated",
+    "candidates_generated",
+    "candidates_with_rivals",
+    "candidates_with_first_wounds",
+    "pressures_without_candidates",
+    "dominant_lens_family",
+    "frame_monoculture_warning",
+    "attention_capture_warning",
+    "rival_suppression_warning",
+    "unwounded_candidate_warning",
+    "fertility_confidence_confusion_warning"
+  ],
+  "properties": {
+    "receipt_type": {
+      "type": "string",
+      "enum": ["glimps.emission_census/v0"]
+    },
+    "pressure_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pressures_detected": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "glimpses_generated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lenses_generated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidates_generated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidates_with_rivals": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidates_with_first_wounds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pressures_without_candidates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dominant_lens_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frame_monoculture_warning": {
+      "type": "boolean"
+    },
+    "attention_capture_warning": {
+      "type": "boolean"
+    },
+    "rival_suppression_warning": {
+      "type": "boolean"
+    },
+    "unwounded_candidate_warning": {
+      "type": "boolean"
+    },
+    "fertility_confidence_confusion_warning": {
+      "type": "boolean"
+    }
+  }
+}
