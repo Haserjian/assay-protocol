@@ -87,6 +87,26 @@ def test_selected_intervention_must_match_factorize_decision(validator: Draft7Va
         _validate(validator, receipt)
 
 
+def test_factorize_permissions_disallow_parent_governance(
+    validator: Draft7Validator,
+) -> None:
+    receipt = _load_example("factorize")
+    receipt["new_permissions"]["can_govern"] = True
+
+    with pytest.raises(ValidationError):
+        _validate(validator, receipt)
+
+
+def test_factorize_permissions_require_child_receipts(
+    validator: Draft7Validator,
+) -> None:
+    receipt = _load_example("factorize")
+    receipt["new_permissions"]["requires_child_receipts"] = False
+
+    with pytest.raises(ValidationError):
+        _validate(validator, receipt)
+
+
 def test_archive_hard_selected_elasticity_may_be_null(validator: Draft7Validator) -> None:
     receipt = _load_example("archive_hard")
     receipt["selected_elasticity"] = None

@@ -175,7 +175,13 @@
       "then": {
         "properties": {
           "selected_intervention": {"const": "factorize"},
-          "selected_elasticity": {"type": "number"}
+          "selected_elasticity": {"type": "number"},
+          "new_permissions": {
+            "properties": {
+              "can_govern": {"const": false},
+              "requires_child_receipts": {"const": true}
+            }
+          }
         }
       }
     },
