@@ -119,6 +119,20 @@ def test_emission_census_inconsistent_counts_fail():
     assert_invalid(receipt, "candidates_with_rivals")
 
 
+def test_emission_census_negative_counts_fail_schema_minimums():
+    receipt = copy.deepcopy(census_example())
+    for key in [
+        "pressures_detected",
+        "glimpses_generated",
+        "lenses_generated",
+        "candidates_generated",
+        "candidates_with_rivals",
+        "candidates_with_first_wounds",
+    ]:
+        receipt[key] = -1
+    assert_invalid(receipt, "below minimum 0")
+
+
 def test_emission_census_missing_first_wounds_warning_is_enforced():
     receipt = copy.deepcopy(census_example())
     receipt["candidates_with_first_wounds"] = receipt["candidates_generated"] - 1

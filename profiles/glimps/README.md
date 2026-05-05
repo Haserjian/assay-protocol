@@ -88,7 +88,15 @@ Emit machine-readable output:
 python3 scripts/glimps_validate.py profiles/glimps/examples/wound_receipt.json --json
 ```
 
-The validator dispatches by `receipt_type`, loads the matching schema, and enforces GLIMPS authority boundaries. It rejects unknown receipt types, authority leakage, missing rivals, missing first wounds, invalid wound routes, and census counts whose warnings do not match the counts.
+The profile validator dispatches by `receipt_type`, loads the matching schema, and enforces GLIMPS authority boundaries. It rejects unknown receipt types, authority leakage, missing rivals, missing first wounds, invalid wound routes, and census counts whose warnings do not match the counts.
+
+The general Assay validator also dispatches GLIMPS receipts:
+
+```bash
+python3 scripts/assay_validate.py profiles/glimps/examples/agent_failure_birth_receipt.json --json
+```
+
+This makes GLIMPS visible to the broader Assay validation path while keeping it incubating and non-authoritative.
 
 ## Non-Goals
 

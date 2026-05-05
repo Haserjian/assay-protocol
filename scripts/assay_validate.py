@@ -40,6 +40,16 @@ except ImportError:
     )
 
 
+try:
+    from glimps_validate import SCHEMA_BY_RECEIPT_TYPE as GLIMPS_RECEIPT_TYPES
+    from glimps_validate import validate_glimps_receipt
+except ImportError:
+    # Keep the gateway conformance validator usable even when profile validators
+    # are not installed on a copied script path.
+    GLIMPS_RECEIPT_TYPES = {}
+    validate_glimps_receipt = None
+
+
 # =============================================================================
 # Assay Behavioral Requirements (from SPEC.md)
 # =============================================================================
@@ -463,6 +473,98 @@ def validate_receipts(receipts: list[dict]) -> ConformanceReport:
     return report
 
 
+def is_glimps_receipt_type(receipt_type: object) -> bool:
+    """Return true for receipt types owned by the GLIMPS profile namespace."""
+    return isinstance(receipt_type, str) and receipt_type.startswith("glimps.")
+
+
+def dispatch_profile_validation(receipts: list[dict]) -> Optional[dict]:
+    """Dispatch profile-owned receipts to their profile validator.
+
+    Returns None when no profile owns the receipts, preserving the legacy Assay
+    Tool Safety Profile conformance path for ordinary gateway receipts.
+    """
+    receipt_types = [receipt.get("receipt_type", "<missing>") for receipt in receipts]
+    malformed_receipt_types = [
+        {
+            "ok": False,
+            "receipt_type": receipt_type,
+            "profile": "unknown",
+            "errors": ["receipt_type: must be a string"],
+        }
+        for receipt_type in receipt_types
+        if not isinstance(receipt_type, str)
+    ]
+    if malformed_receipt_types:
+        if len(malformed_receipt_types) == 1 and len(receipt_types) == 1:
+            return malformed_receipt_types[0]
+        return {
+            "ok": False,
+            "profile": "unknown",
+            "errors": ["receipt_type: must be a string"],
+            "results": malformed_receipt_types,
+        }
+
+    if not any(is_glimps_receipt_type(receipt_type) for receipt_type in receipt_types):
+        return None
+
+    if not all(is_glimps_receipt_type(receipt_type) for receipt_type in receipt_types):
+        return {
+            "ok": False,
+            "profile": "mixed",
+            "errors": ["cannot mix GLIMPS profile receipts with non-GLIMPS receipts"],
+            "results": [
+                {
+                    "ok": False,
+                    "receipt_type": receipt_type,
+                    "profile": "glimps" if is_glimps_receipt_type(receipt_type) else "unknown",
+                    "errors": ["mixed profile batch is not supported"],
+                }
+                for receipt_type in receipt_types
+            ],
+        }
+
+    if validate_glimps_receipt is None:
+        return {
+            "ok": False,
+            "profile": "glimps",
+            "errors": ["GLIMPS validator is unavailable"],
+            "results": [],
+        }
+
+    results = []
+    for receipt in receipts:
+        receipt_type = receipt.get("receipt_type", "<missing>")
+        if receipt_type not in GLIMPS_RECEIPT_TYPES:
+            results.append({
+                "ok": False,
+                "receipt_type": receipt_type,
+                "profile": "glimps",
+                "errors": [f"unknown GLIMPS receipt_type: {receipt_type!r}"],
+            })
+            continue
+
+        result = validate_glimps_receipt(receipt)
+        results.append({
+            "ok": result.passed,
+            "receipt_type": result.receipt_type,
+            "profile": "glimps",
+            "errors": result.errors,
+        })
+
+    ok = all(result["ok"] for result in results)
+    if len(results) == 1:
+        return results[0]
+
+    return {
+        "ok": ok,
+        "profile": "glimps",
+        "receipt_count": len(results),
+        "errors": [error for result in results for error in result["errors"]],
+        "results": results,
+    }
+
+
 def load_receipts(path: Path) -> list[dict]:
     """Load receipts from a file or directory."""
     receipts = []
@@ -519,6 +621,11 @@ def main():
         action="store_true",
         help="Verbose output",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Print structured JSON report to stdout",
+    )
 
     args = parser.parse_args()
 
@@ -533,8 +640,30 @@ def main():
         print("Warning: No receipts found")
         receipts = []
 
+    profile_report = dispatch_profile_validation(receipts)
+    if profile_report is not None:
+        if args.output:
+            with open(args.output, "w") as f:
+                json.dump(profile_report, f, indent=2)
+        if args.json:
+            print(json.dumps(profile_report, indent=2))
+        else:
+            status = "PASS" if profile_report["ok"] else "FAIL"
+            print(f"Assay profile validation: [{status}]")
+            if "receipt_type" in profile_report:
+                print(f"Receipt type: {profile_report['receipt_type']}")
+            print(f"Profile: {profile_report['profile']}")
+            for error in profile_report.get("errors", []):
+                print(f"  {error}")
+            if args.output:
+                print(f"Report saved to: {args.output}")
+        sys.exit(0 if profile_report["ok"] else 1)
+
     # Run validation
     report = validate_receipts(receipts)
+    if args.json:
+        print(json.dumps(report.to_dict(), indent=2))
+        sys.exit(0 if report.overall_pass else 1)
 
     # Print summary
     print("=" * 60)

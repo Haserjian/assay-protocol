@@ -119,6 +119,11 @@ def _validate_schema_fragment(
     if "enum" in schema and value not in schema["enum"]:
         errors.append(f"{path}: value {value!r} not in enum {schema['enum']!r}")
 
+    if isinstance(value, int) and not isinstance(value, bool):
+        minimum = schema.get("minimum")
+        if minimum is not None and value < minimum:
+            errors.append(f"{path}: value {value!r} below minimum {minimum}")
+
     if isinstance(value, str):
         min_length = schema.get("minLength")
         if min_length is not None and len(value) < min_length:
