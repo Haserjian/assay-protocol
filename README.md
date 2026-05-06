@@ -104,6 +104,7 @@ Assay is useful anywhere another party needs more than logs:
 | File | Purpose |
 |------|---------|
 | [SPEC.md](SPEC.md) | Full protocol specification |
+| [docs/REPO_MAP.md](docs/REPO_MAP.md) | Repo lineage and ecosystem boundaries |
 | [FOR_HUMANS.md](FOR_HUMANS.md) | Plain-English explainer for the broader protocol surface |
 | [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Receipt-format notes for signed evidence artifacts |
 | [schemas/](schemas/) | Machine-readable schemas |
