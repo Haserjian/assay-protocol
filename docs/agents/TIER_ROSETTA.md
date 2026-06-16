@@ -30,7 +30,7 @@ a versioned amendment to an existing axis, never as a parallel ladder.
 | Replay basis × comparator | What kind of replay produced the verdict? | `recorded_trace / live_reexecution` × comparator tier `A` | `RCE_V0_NORMATIVE_SPEC.md` §replay |
 | Falsification status | Was disproof attempted? | `not_required / absent / named / executed_passed / executed_failed` | `assay-toolkit/src/assay/claim_verifier.py::FALSIFIER_STATUSES` |
 | Claim support / settlement | What happened to the claim over time? | `ASSERTED / SUPPORTED / WEAKENED / CONTRADICTED / RETRACTED`; doc-claim statuses `implemented / designed / speculative / aspirational`; numeric-claim statuses `active / superseded / disputed / retired` | `epistemic_kernel.py::CLAIM_SUPPORT_STATUSES`; compact-doctrine; loom-doctrine |
-| Institutional assurance | What assurance class did the ledger record? | `L0, L1, ...` — **UNPINNED** (see Fractures) | `assay-ledger/ledger.schema.json` |
+| Institutional assurance | What assurance class did the ledger record? | `L0 / L1 / L2 / L3` — pinned 2026-06-15 | `assay-ledger/ledger.schema.json` (enum), sourced from `attestation.schema.json` |
 
 ## Grounding-axis crosswalk (all rows `[INFERRED]`, pending owner ratification)
 
@@ -71,10 +71,16 @@ Caveats on this table:
    Loom ladder partially fuses epistemic strength with carrier strength.
    Mark `[NEEDS CHECK]` with Loom doctrine owner before any tooling maps
    them automatically.
-3. **Ledger `assurance_level` is unpinned.** The schema describes it as
-   "L0, L1, etc." with no enum — a tier vocabulary with no defined members
-   is coherence debt in the trust spine itself. Should be pinned by versioned
-   schema amendment.
+3. **Ledger `assurance_level` — RESOLVED 2026-06-15.** Was a free string
+   ("L0, L1, etc.") with no enum — a tier vocabulary with no defined members,
+   coherence debt in the trust spine. Pinned to `[L0, L1, L2, L3]` in
+   `assay-ledger` commit `8a1779b` (schema enum + enforced validator check +
+   6 regression tests), sourced from the attestation contract
+   (`assay-toolkit/src/assay/schemas/attestation.schema.json`). Adjacent
+   finding, NOT resolved: the ledger's sibling `mode` field is still a free
+   string anticipating "active", while the attestation contract pins `mode`
+   to `shadow / enforced / breakglass` — a value-set divergence on a
+   non-tier field. Flagged for follow-on reconciliation.
 4. **Near-collision risk demonstrated.** The design thread independently
    minted `P0–P4` with different semantics under labels identical to the
    existing P-ladder (thread-`P1` "Observed" ≈ existing `P2`
