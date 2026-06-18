@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Declared the RCE replay/evidence artifact as the active 30-day canonical object in `strategy/RCE_CANONICAL_OBJECT_30D.md`
 
+### Fixed
+- RCE doctrine findability: relocated the RCE normative spec, boundary amendment, Tier Rosetta, and MOLT protocol from loose untracked `~` files into version control (now tracked on `main`). Incident/repair note: `docs/agents/RCE_FINDABILITY_REPAIR_2026-06-16.md`.
+
 ### Specification Highlights
 - **Deny-by-default policies**: All actions require explicit authorization
 - **Tamper-evident receipts**: Ed25519 signed, JCS canonicalized
